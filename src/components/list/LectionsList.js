@@ -8,53 +8,52 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import './lections_list.scss';
+import { width } from '@mui/system';
 
-const LectionsList = () => {
+const LectionsList = (props) => {
 
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         let newItems = [];
-        for(let i = 0; i < 15; i++){
+        props.items.forEach(element => {
             newItems.push( <>
                 <ListItem 
-                alignItems="flex-start"
                 onClick={() => {
                     console.log("some...")
                 }}
                 className='lections_list__item'
+                sx={{ padding:0 }}
                 >
-                    <ListItemAvatar>
-                    <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                    </ListItemAvatar>
-                    <ListItemText
-                    primary="Summer BBQ"
-                    secondary={
-                        <React.Fragment>
+                <ListItemText
+                    primary = {
                         <Typography
                             sx={{ display: 'inline' }}
                             component="span"
-                            variant="body2"
+                            variant="h6"
                             color="text.primary"
                         >
-                            to Scott, Alex, Jennifer
+                            {element.title}
                         </Typography>
-                        {" — Wish I could come, but I'm out of town this…"}
+                    }
+                    secondary={
+                        <React.Fragment>
+                            {element.subtitle}
                         </React.Fragment>
                     }
-                    />
+                />
                 </ListItem>
-                <Divider variant="inset" component="li" />
+            <Divider variant="fullWidth" component="li" />
             </>);
-            setItems(newItems);
-        }
+        });
+        setItems(newItems);
     },[]);
 
     console.log(items)
 
     return(
         <div className='lections_list'>
-            <List sx={{bgcolor: 'background.paper', width:'100%', maxHeight:"100vh" }}> 
+            <List sx={{bgcolor: 'background.paper', width:'100%', maxHeight:"100vh", padding:0 }}> 
                     {items}
             </List>
         </div>

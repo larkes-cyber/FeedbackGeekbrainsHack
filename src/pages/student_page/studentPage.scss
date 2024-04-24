@@ -8,6 +8,10 @@
     }
     &__tabs{
         width: 65%;
+        &__chart{
+            max-height: 100vh;
+            overflow-y: scroll;
+        }
     }
     &__lections{
         width: 30%;
