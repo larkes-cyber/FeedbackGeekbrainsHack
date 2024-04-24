@@ -54,7 +54,7 @@ const LectionsList = () => {
 
     return(
         <div className='lections_list'>
-            <List sx={{bgcolor: 'background.paper', maxHeight:"100vh" }}> 
+            <List sx={{bgcolor: 'background.paper', width:'100%', maxHeight:"100vh" }}> 
                     {items}
             </List>
         </div>

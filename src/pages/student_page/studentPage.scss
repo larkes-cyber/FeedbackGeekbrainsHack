@@ -1,5 +1,29 @@
+
 .student_page{
-    &__lections{
-        
+    padding-top: 20px;
+    &__wrapper{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
+    &__tabs{
+        width: 65%;
+    }
+    &__lections{
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        &__title{
+            font-size: 30px;
+            color: black;
+            font-family: sans-serif;
+            margin-bottom: 15px;
+        }
+    }
+}
+
+.big_block{
+    width: 100%;
+    height: 200px;
+    background-color: green;
 }
