@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import Spinner from "../../components/spinner/spinner";
 import StudentPage from "../student_page/StudentPage";
 import TutorPage from "../tutor_page/TutorPage";
+import './app.scss';
 
 function App() {
   return (

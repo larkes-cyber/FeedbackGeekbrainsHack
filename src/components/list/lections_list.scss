@@ -1,0 +1,11 @@
+.lections_list{
+    max-height: 100vh;
+    overflow:hidden; 
+    overflow-y:scroll;
+    width: 30%;
+    &__item{
+        &:hover{
+            cursor: pointer;
+        }
+    }
+}
