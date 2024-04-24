@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import './lections_list.scss';
 import { width } from '@mui/system';
+import { Card } from '@mui/material';
+
 
 const LectionsList = (props) => {
 
@@ -18,32 +20,21 @@ const LectionsList = (props) => {
         let newItems = [];
         props.items.forEach(element => {
             newItems.push( <>
-                <ListItem 
-                onClick={() => {
-                    console.log("some...")
-                }}
-                className='lections_list__item'
-                sx={{ padding:0 }}
+                <Card 
+                sx={{ padding:1, mb:1, ml:1, mr:5, mt:1 }}
+                elevation={2}
                 >
-                <ListItemText
-                    primary = {
-                        <Typography
-                            sx={{ display: 'inline' }}
-                            component="span"
-                            variant="h6"
-                            color="text.primary"
-                        >
-                            {element.title}
-                        </Typography>
-                    }
-                    secondary={
-                        <React.Fragment>
-                            {element.subtitle}
-                        </React.Fragment>
-                    }
-                />
-                </ListItem>
-            <Divider variant="fullWidth" component="li" />
+                    <ListItemText
+                        primary = {
+                            element.title
+                        }
+                        secondary={
+                            <React.Fragment>
+                                {element.subtitle}
+                            </React.Fragment>
+                        }
+                    />
+                </Card>
             </>);
         });
         setItems(newItems);

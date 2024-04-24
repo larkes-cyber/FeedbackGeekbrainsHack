@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import * as React from 'react';
 import ChartView from './views/ChartView';
 import Divider from '@mui/material/Divider';
+import CommentsList from '../../components/list/CommentsList'
 
 
 
@@ -26,7 +27,7 @@ const StudentPage = () => {
                 <div className='student_page__wrapper'>
                     <div className='student_page__lections'>
                         <Typography
-                                sx={{ display: 'inline', mb:1.5, mt:1.5 }}
+                                sx={{ display: 'inline', mb:1.5, mt:1.5, ml:1 }}
                                 component="span"
                                 variant="h5"
                                 color="text.primary"
@@ -87,7 +88,27 @@ const StudentPage = () => {
                                 </div>
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={1}>
-                            Item Two
+                                <CommentsList items = {[
+                                    {
+                                        title:"Дмитрий конь",
+                                        subtitle:"Да ебланы да посмотрите на них только. Вы клоуны как вы можете вообще такое преподовать, вот у нас в дтт вот там то да, препод на все 100. ее бы сюда к вам преподовать... "
+                                    },   {
+                                        title:"Дмитрий конь",
+                                        subtitle:"Да ебланы да посмотрите на них только. Вы клоуны как вы можете вообще такое преподовать, вот у нас в дтт вот там то да, препод на все 100. ее бы сюда к вам преподовать... "
+                                    },   {
+                                        title:"Дмитрий конь",
+                                        subtitle:"Да ебланы да посмотрите на них только. Вы клоуны как вы можете вообще такое преподовать, вот у нас в дтт вот там то да, препод на все 100. ее бы сюда к вам преподовать... "
+                                    },   {
+                                        title:"Дмитрий конь",
+                                        subtitle:"Да ебланы да посмотрите на них только. Вы клоуны как вы можете вообще такое преподовать, вот у нас в дтт вот там то да, препод на все 100. ее бы сюда к вам преподовать... "
+                                    },   {
+                                        title:"Дмитрий конь",
+                                        subtitle:"Да ебланы да посмотрите на них только. Вы клоуны как вы можете вообще такое преподовать, вот у нас в дтт вот там то да, препод на все 100. ее бы сюда к вам преподовать... "
+                                    },   {
+                                        title:"Дмитрий конь",
+                                        subtitle:"Да ебланы да посмотрите на них только. Вы клоуны как вы можете вообще такое преподовать, вот у нас в дтт вот там то да, препод на все 100. ее бы сюда к вам преподовать... "
+                                    },
+                                ]} sx={{width:"60%"}}/>
                             </CustomTabPanel>
                             <CustomTabPanel value={value} index={2}>
                                 <div className='student_page__tabs__chart'>
