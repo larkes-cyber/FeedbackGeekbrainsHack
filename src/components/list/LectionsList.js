@@ -1,41 +1,29 @@
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import './lections_list.scss';
-import { width } from '@mui/system';
+import ListItemButton from '@mui/material/ListItemButton';
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Card } from '@mui/material';
+
+
 
 
 const LectionsList = (props) => {
 
     const [items, setItems] = useState([]);
 
+      
+
     useEffect(() => {
         let newItems = [];
         props.items.forEach(element => {
-            newItems.push( <>
-                <Card 
-                sx={{ padding:1, mb:1, ml:1, mr:5, mt:1 }}
-                elevation={2}
-                >
-                    <ListItemText
-                        primary = {
-                            element.title
-                        }
-                        secondary={
-                            <React.Fragment>
-                                {element.subtitle}
-                            </React.Fragment>
-                        }
-                    />
-                </Card>
-            </>);
+            newItems.push(
+                <ExpendLection name={element.name} />
+            );
         });
         setItems(newItems);
     },[]);
@@ -51,5 +39,39 @@ const LectionsList = (props) => {
     )
 
 }
+
+const ExpendLection = (props) => {
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+      setOpen(!open);
+    };
+  
+
+    return(
+        <>
+            <Card
+            elevation={2}
+            sx={{mb:1, ml:1, mr:5, mt:1, width:"95%" }}
+            >
+                <ListItemButton onClick={handleClick} sx={{ padding:1}} >
+                    <ListItemText
+                        primary = {
+                            props.name
+                    }
+                    />
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+            </Card>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+
+              </List>
+          </Collapse>
+      </>
+    )
+
+}
+
 
 export default LectionsList;

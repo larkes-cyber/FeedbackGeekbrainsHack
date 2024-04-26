@@ -1,12 +1,10 @@
-.lections_list{
+.comments_list{
     max-height: 100vh;
     overflow:hidden; 
     overflow-y:scroll;
     &__item{
         &:hover{
-            transition: color 0.3s ease-in-out;
             cursor: pointer;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 10px;
         }
     }
 }

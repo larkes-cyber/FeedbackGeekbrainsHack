@@ -3,7 +3,7 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import React, { useEffect, useState } from 'react';
-
+import './comments_list.scss'
 
 const CommentsList = (props) => {
 
@@ -17,7 +17,7 @@ const CommentsList = (props) => {
                 onClick={() => {
                     console.log("some...")
                 }}
-                className='lections_list__item'
+                className='comments_list__item'
                 sx={{ padding:0 }}
                 >
                 <ListItemText
@@ -38,7 +38,7 @@ const CommentsList = (props) => {
     },[]);
 
     return(
-        <List sx={{bgcolor: 'background.paper', width:'100%', maxHeight:"100vh", padding:0 }}> 
+        <List className="comments_list" sx={{bgcolor: 'background.paper', width:'100%', maxHeight:"100vh", padding:0 }}> 
                 {items}
         </List>
     );

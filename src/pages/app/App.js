@@ -19,7 +19,7 @@ function App() {
             </Suspense>
         </main>
     </div>
-    </BrowserRouter>    
+    </BrowserRouter>   
   );
 }
 
