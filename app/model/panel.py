@@ -25,6 +25,9 @@ class LectionRecommendation(BaseModel):
 
 
 # Request, запросы приходящие на сервак 
+class RequestFetchLectionByIdCourse(BaseModel):
+    idCourse: str
+
 class RequestFetchLection(BaseModel):
     title: str
 
@@ -48,7 +51,7 @@ class ResponseFetchCourse(BaseModel):
     }
 
 class ResponseFetchLection(BaseModel):
-    qestion: List[Lection]
+    lection: List[Lection]
 
     model_config = {
         "json_schema_extra": {

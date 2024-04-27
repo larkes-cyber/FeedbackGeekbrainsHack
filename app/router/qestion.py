@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app import DB
+from app.db import filterQestion
 from app.model.qestion import Qestion
 from app.model.qestion import RequestFetchQestionByIdxLection, RequestAnswerQestionByIdxLection
 from app.model.qestion import ResponseFetchQestionByIdxLection, ResponseAnswerQestionByIdxLection
@@ -21,7 +22,9 @@ async def fetchQestionByIdxLection(app: RequestFetchQestionByIdxLection):
     lection = DB.FetchLectionByIdx(app.idLesson)
     
     dataQestion = list()
+    dataQestion.append(Qestion(idQesion="-1", qestion=filterQestion))
     for qestion in lection.idQuestion:
+        print(lection)
         newQestion = DB.FetchQestionByIdx(qestion)
         dataQestion.append(Qestion(idQesion=newQestion.idQesion, qestion=newQestion.qestion))
 
@@ -46,7 +49,7 @@ async def editLectionQestionByIdx(app: RequestEditLectionQestionByIdx):
 
 @router.put("/addLectionQestionByIdx", response_model=ResponseAddLectionQestionByIdx)
 async def addLectionQestionByIdx(app: RequestAddLectionQestionByIdx):
-    idd = DB.AddLectionQestionByIdx(app.idQesion, app.title)
+    idd = DB.AddLectionQestionByIdx(app.idLection, app.title)
     
     return ResponseAddLectionQestionByIdx(status=True)
 

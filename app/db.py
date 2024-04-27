@@ -6,7 +6,7 @@ from typing import List
 
 # Заготовки
 class Qestion(BaseModel):
-    idQesion: int
+    idQesion: str
     qestion: str
 
 class CollectionLection(BaseModel):
@@ -53,7 +53,7 @@ sampleCollectionLection = {"title": "sample",
                            "countAnswer": "semple",
                            "idCourse": -1,
                            "titleCourse": "creater",
-                           "idQuestion": [-1], 
+                           "idQuestion": [str(-1)], 
                            "idStatistic": -1
                            }
 
@@ -95,7 +95,7 @@ class UseDB():
         data = list()
 
         for element in collectionCourse.find():
-            collectionCourse = CollectionCourse(id=((element["_id"]).toString()), title=element["title"])
+            collectionCourse = CollectionCourse(id=str(element["_id"]), title=element["title"])
             data.append(collectionCourse)
         
         client.close()
@@ -107,7 +107,7 @@ class UseDB():
         collectionCourse = dbTable["course"]
         element = collectionCourse.find_one({"_id": ObjectId(idCourse)})
 
-        response = CollectionCourse(id=ObjectId(idCourse), title=element["title"])
+        response = CollectionCourse(id=idCourse, title=element["title"])
 
         return response
     
@@ -118,12 +118,36 @@ class UseDB():
         collectionLection = dbTable["lection"]
         element = collectionLection.find_one({"_id": ObjectId(idx)})
 
-        response = CollectionLection(id=((element["_id"]).toString()), title=element["title"], description=element["description"],
+        listQestion = list()
+        for elementQestion in element["idQuestion"]:
+            listQestion.append(str(elementQestion))
+
+        response = CollectionLection(id=str(element["_id"]), title=element["title"], description=element["description"],
                                               tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=element["idCourse"],
-                                              titleCourse=element["titleCourse"], idQuestion=element["idQuestion"], idStatistic=element["idStatistic"])
+                                              titleCourse=element["titleCourse"], idQuestion=listQestion, idStatistic=str(element["idStatistic"]))
         
         client.close()
         return response
+    
+        
+    def FetchLectionByIdCourse(self, idCourse:str):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionLection = dbTable["lection"]
+        dataResponse = list()
+
+        for element in collectionLection.find({'idCourse': idCourse}):
+            listQestion = list()
+            for elementQestion in element["idQuestion"]:
+                listQestion.append(str(elementQestion))
+
+            response = CollectionLection(id=str(element["_id"]), title=element["title"], description=element["description"],
+                                              tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=element["idCourse"],
+                                              titleCourse=element["titleCourse"], idQuestion=listQestion, idStatistic=str(element["idStatistic"]))
+            data.append(response)
+        
+        client.close()
+        return dataResponse 
 
 
     def FetchLectionByTitle(self, title:str):
@@ -131,25 +155,32 @@ class UseDB():
         dbTable = client["feedback"]
         collectionLection = dbTable["lection"]
         dataResponse = list()
+        if "title" == "[-1]":
+            collectionLection.find()
+        else:
+            collectionLection.find({"title": title })
 
-        for element in collectionLection.find({'title':{'$regex':title}}):
-            response = CollectionLection(id=((element["_id"]).toString()), title=element["title"], description=element["description"],
-                                              tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=element["idCourse"],
-                                              titleCourse=element["titleCourse"], idQuestion=element["idQuestion"], idStatistic=element["idStatistic"])
-            data.append(response)
+        for element in collectionLection.find():
+            listQestion = list()
+            for elementQestion in element["idQuestion"]:
+                listQestion.append(str(elementQestion))
+            response = CollectionLection(id=str(element["_id"]), title=element["title"], description=element["description"],
+                                              tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=str(element["idCourse"]),
+                                              titleCourse=element["titleCourse"], idQuestion=listQestion, idStatistic=str(element["idStatistic"]))
+            dataResponse.append(response)
         
         client.close()
         return dataResponse 
     
 
-    def FetchQestionByidx(self, idx: str):
+    def FetchQestionByIdx(self, idx: str):
         client = pymongo.MongoClient(self.session)
         dbTable = client["feedback"]
         collectionQestion = dbTable["qestion"]
 
         element = collectionQestion.find_one({"_id": ObjectId(idx)}) #  Поиск по индексу
-
-        response = Qestion(element=(element["_id"]).toString(), qestion=element["qestion"])
+        print(element)
+        response = Qestion(idQesion=str(element["_id"]), qestion=element["title"])
         client.close()
         return response
 
@@ -158,7 +189,7 @@ class UseDB():
         dbTable = client["feedback"]
         collectionQestion = dbTable["qestion"]
 
-        collectionQestion.update_one({"_id": ObjectId(idx)}, {"title": title})
+        collectionQestion.update_one({"_id": ObjectId(idx)}, {"$set": {"title": title}})
         client.close()
         return True
     
@@ -166,8 +197,11 @@ class UseDB():
         client = pymongo.MongoClient(self.session)
         dbTable = client["feedback"]
         collectionQestion = dbTable["qestion"]
+        collectionLection = dbTable["lection"]
 
         collectionQestion.delete_one({"_id": ObjectId(idx)})
+        collectionLection.update_many({}, {"$pull": {"idQuestion": ObjectId(idx)}})
+        print([i for i in collectionLection.find({"title": "Best Life"})])
         client.close()
         return True
     
@@ -175,14 +209,18 @@ class UseDB():
         client = pymongo.MongoClient(self.session)
         dbTable = client["feedback"]
         collectionQestion = dbTable["qestion"]
+        collectionLection = dbTable["lection"]
 
         newElement = collectionQestion.insert_one({"title": title})
 
         lection = self.FetchLectionByIdx(idLection)
+        print(lection)
         newQestions = list()
-        newQestions += lection.idQuestion
+        for qestion in lection.idQuestion:
+            newQestions.append(ObjectId(qestion))
         newQestions.append(newElement.inserted_id)
-        collectionQestion.update_one({"_id": ObjectId(idLection)}, {"idQuestion": newQestions})
+        print(newQestions)
+        collectionLection.update_one({"_id": ObjectId(lection.id)}, { "$set": {"idQuestion": newQestions}})
 
         client.close()
         return newElement.inserted_id
@@ -230,11 +268,11 @@ class UseDB():
         collectionLection = dbTable["lection"]
 
         if title != "[-1]":
-            collectionLection.update_one({"_id": ObjectId(idLection)}, {"title": title})
+            collectionLection.update_one({"_id": ObjectId(idLection)}, { "$set": {"title": title}})
         if description != "[-1]":
-            collectionLection.update_one({"_id": ObjectId(idLection)}, {"description": description})
+            collectionLection.update_one({"_id": ObjectId(idLection)}, { "$set": {"description": description}})
         if tutor != "[-1]":
-            collectionLection.update_one({"_id": ObjectId(tutor)}, {"title": tutor})
+            collectionLection.update_one({"_id": ObjectId(tutor)}, { "$set": {"title": tutor}})
         
         client.close()
         return True
@@ -261,8 +299,11 @@ class UseDB():
         dbTable = client["feedback"]
         collectionCourse = dbTable["course"]
 
+        # myquery = { "address": "Valley 345" }
+        # newvalues = { "$set": { "address": "Canyon 123" } }
+
         if title != "[-1]":
-            collectionCourse.update_one({"_id": ObjectId(idCource)}, {"title": title})
+            collectionCourse.update_one({"_id": ObjectId(idCource)}, { "$set": {"title": title}})
         
         client.close()
         return True
