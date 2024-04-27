@@ -144,7 +144,7 @@ class UseDB():
             response = CollectionLection(id=str(element["_id"]), title=element["title"], description=element["description"],
                                               tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=element["idCourse"],
                                               titleCourse=element["titleCourse"], idQuestion=listQestion, idStatistic=str(element["idStatistic"]))
-            data.append(response)
+            dataResponse.append(response)
         
         client.close()
         return dataResponse 
