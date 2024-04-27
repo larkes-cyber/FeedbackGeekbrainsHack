@@ -43,16 +43,14 @@ class LectionRepository{
     async fetchQuestions(idLection){
         const data = await this._questionDataSource.fetchQuestions(idLection);
         const parsedData = await data.json();
-        return parsedData.question.map(item => ({id:item._id, question:item.question}))
+        return parsedData.question.map(item => ({id:item.id, question:item.question}))
     }
 
     async addQuestion(question){
        return this._questionDataSource.addQuestion(question);
     }
 
-    async deleteQuestion(idQuestion){
-        this._questionDataSource.deleteQuestion(idQuestion);
-    }
+ 
     async addAnswer(){
 
     }
@@ -65,6 +63,12 @@ class LectionRepository{
         return this._lectionsDataSource.addLection(lection);
     }
 
+    async deleteQuestion(idLection, idQuestion){
+        return this._questionDataSource.deleteQuestion({
+            idLection:idLection,
+            idQuestion:idQuestion
+        })
+    }
 }
 
 export default LectionRepository;

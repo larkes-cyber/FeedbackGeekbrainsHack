@@ -196,6 +196,11 @@ const TutorPage = () => {
                                         refreshQuestions();
                                      })
                                    }}
+                                   onDeleteQuestion={(id) => {
+                                     lectionRepository.deleteQuestion(selectedLection, id).then(res =>{
+                                        refreshQuestions();
+                                     })
+                                   }}
                                     /> : null} 
                                 </CustomTabPanel>
                         </Box>

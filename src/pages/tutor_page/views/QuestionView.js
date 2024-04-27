@@ -40,14 +40,15 @@ const QuestionView = (props) => {
                 />
                 <IconButton  
                 sx={{mr:1}}
-                onClick={()=>{
-                    props.onDeleteQuestion(element.id);
-                }}
                 >
                   <BorderColorIcon/>
                 </IconButton>
                 <IconButton
                   sx={{mr:1}}
+                  onClick={()=>{
+                        console.log(element);
+                        props.onDeleteQuestion(element.id);
+                    }}
                   >
                    <ClearIcon/>
                 </IconButton>

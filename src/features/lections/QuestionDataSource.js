@@ -51,18 +51,20 @@ class QuestionDataSource{
         else throw new Error("some web error")
     }
 
-    async deleteQuestion(idQuestion){
-        const data = await fetch(`${this._api}/addQuestion`, {
-            method: 'PUT',
+    async deleteQuestion(request){
+        console.log(request);
+        const data = await fetch(`${this._api}deleteQestion`, {
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json;charset=utf-8'
             },
             body:
             JSON.stringify({
-                idQuestion:idQuestion
+                idLection: request.idLection,
+                idQuestion: request.idQuestion
             })
         });
-        if(data.ok) return data.body
+        if(data.ok) return data
         else throw new Error("some web error")
     }
 
