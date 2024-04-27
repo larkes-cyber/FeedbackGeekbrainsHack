@@ -69,6 +69,10 @@ class LectionRepository{
             idQuestion:idQuestion
         })
     }
+
+    async fetchFiltredLections(text){
+        return await this._lectionsDataSource.fetchFiltredLections(text);
+    }
 }
 
 export default LectionRepository;

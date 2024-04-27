@@ -38,11 +38,11 @@ const QuestionView = (props) => {
                      element.question
                     }
                 />
-                <IconButton  
+                {/* <IconButton  
                 sx={{mr:1}}
                 >
                   <BorderColorIcon/>
-                </IconButton>
+                </IconButton> */}
                 <IconButton
                   sx={{mr:1}}
                   onClick={()=>{
