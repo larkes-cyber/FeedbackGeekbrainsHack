@@ -36,9 +36,15 @@ const TutorPage = () => {
     ,[]);
 
     useEffect(() => {
-        lectionRepository.fetchLectionMain(selectedLection).then(res => {
-            setSelectedLectionMain(res);
-        })
+        if(selectedLection != null){
+            lectionRepository.fetchLectionMain(selectedLection).then(res => {
+                setSelectedLectionMain(res);
+            })
+            lectionRepository.fetchQuestions().then((res) => {
+                setQuestions(res);
+            })
+            
+    }
     }, [selectedLection]);
 
   
@@ -100,17 +106,13 @@ const TutorPage = () => {
                                 </CustomTabPanel>
                                 <CustomTabPanel value={tabs} index={1}>
                                     <div className='tutor_page__tabs__chart'>
-                                    <ChartView/>
-                                    <ChartView/>
-                                    <ChartView/>
-                                    <ChartView/>
-                                    <ChartView/>
-                                    <ChartView/>
-
+                                        {
+                                            selectedLectionMain != null ? <ChartView/> : null
+                                        }
                                     </div>
                                 </CustomTabPanel>
                                 <CustomTabPanel value={tabs} index={2}>
-                                  <QuestionView questions={questions} />
+                                  {questions != null ? <QuestionView questions={questions} /> : null} 
                                 </CustomTabPanel>
                         </Box>
                     </div>

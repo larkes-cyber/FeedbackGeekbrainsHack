@@ -58,7 +58,13 @@ const ChartView = () => {
      
 
     return(
+      <div>
         <Bar options={options} data={data} />
+        <Bar options={options} data={data} />
+        <Bar options={options} data={data} />
+        <Bar options={options} data={data} />
+        <Bar options={options} data={data} />
+      </div>
     )
 
 }

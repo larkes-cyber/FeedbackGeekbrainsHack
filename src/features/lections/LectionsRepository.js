@@ -3,7 +3,6 @@ import QuestionDataSource from './QuestionDataSource';
 
 class LectionRepository{
 
-    _api = "http://lolka.com";
 
     _lectionsDataSource = new LectionsDataSource();
     _questionDataSource = new QuestionDataSource();
@@ -25,6 +24,10 @@ class LectionRepository{
 
     async fetchLectionMain(idLection){
         return await this._lectionsDataSource.fetchLectionMain(idLection);
+    }
+
+    async fetchQuestions(){
+        return this._questionDataSource.fetchQuestions("12345");
     }
 
 }
