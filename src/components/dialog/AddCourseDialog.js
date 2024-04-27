@@ -11,21 +11,17 @@ import DialogTitle from '@mui/material/DialogTitle';
 const AddCourseDialog = (
     props
 ) => {
-    const [open, setOpen] = React.useState(true);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+
 
   return (
     <React.Fragment   >
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={true}
+        onClose={() => {
+            props.callbackClose();
+        }}
         PaperProps={{
           component: 'form',
           onSubmit: (event) => {
@@ -35,7 +31,6 @@ const AddCourseDialog = (
             const email = formJson.email;
             console.log(email);
             props.callbackDone();
-            handleClose();
           },
         }}
       >
@@ -57,7 +52,6 @@ const AddCourseDialog = (
           <Button 
            color='secondary'
           onClick={() => {
-            handleClose()
             props.callbackClose();
             }}>Отметить</Button>
           <Button 

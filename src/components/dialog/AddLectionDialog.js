@@ -27,14 +27,6 @@ const AddLectionDialog = (
         setCourses(list);
     }, props);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -43,8 +35,10 @@ const AddLectionDialog = (
   return (
     <React.Fragment   >
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={true}
+        onClose={() => {
+            props.callbackClose();
+        }}
         PaperProps={{
           component: 'form',
           onSubmit: (event) => {
@@ -54,7 +48,6 @@ const AddLectionDialog = (
             const email = formJson.email;
             console.log(email);
             props.callbackDone();
-            handleClose();
           },
         }}
       >
@@ -89,7 +82,6 @@ const AddLectionDialog = (
         </DialogContent>
         <DialogActions>
           <Button onClick={() => {
-            handleClose()
             props.callbackClose();}}
             color='secondary'
             >Отметить</Button>

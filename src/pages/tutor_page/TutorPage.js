@@ -66,7 +66,7 @@ const TutorPage = () => {
                     setShowingCourseDialog(false);
                 }} 
                 callbackDone={()=>{
-
+                    setShowingCourseDialog(false);
                 }}
                 /> : null}
             {showLectionDialog ? <AddLectionDialog 
@@ -74,7 +74,7 @@ const TutorPage = () => {
                 setShowingLectionDialog(false);
             }} 
             callbackDone={()=>{
-
+                setShowingLectionDialog(false);
             }}
             courses={courses}
             /> : null}
