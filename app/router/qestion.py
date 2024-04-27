@@ -10,6 +10,9 @@ from app.model.qestion import ResponseEditLectionQestionByIdx, ResponseAddLectio
 from app.model.qestion import RequestEditLection, RequestDeleteLection, RequestAddLection
 from app.model.qestion import ResponseEditLection, ResponseDeleteLection, ResponseAddLection
 
+from app.model.qestion import RequestEditCourse, RequestDeleteCourse, RequestAddCourse
+from app.model.qestion import ResponseEditCourse, ResponseDeleteCourse, ResponseAddCourse
+
 router = APIRouter()
 
 
@@ -70,3 +73,22 @@ async def deleteLection(app: RequestDeleteLection):
     DB.DeleteLection(app.idLection)
 
     return ResponseDeleteLection(status=True)
+
+
+@router.put("/addCourse", response_model=ResponseAddCourse)
+async def addCourse(app: RequestAddCourse):
+    DB.AddCource(app.title)
+
+    return ResponseAddCourse(status=True)
+
+@router.put("/editCourse", response_model=ResponseEditCourse)
+async def editCourse(app: RequestEditCourse):
+    DB.EditCource(app.title, app.idCourse)
+
+    return ResponseEditCourse(status=True)
+
+@router.put("/deleteCourse", response_model=ResponseDeleteCourse)
+async def deleteCourse(app: RequestDeleteCourse):
+    DB.DeleteCource(app.idCourse)
+
+    return ResponseDeleteCourse(status=True)

@@ -246,6 +246,36 @@ class UseDB():
 
         collectionLection.delete_one({"_id": ObjectId(idLection)})
         return True
+    
+    def AddCource(self, title):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionCourse = dbTable["course"]
+
+        newElement = collectionCourse.insert_one({"title": title})
+
+        return newElement.inserted_id
+
+    def EditCource(self, title, idCource):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionCourse = dbTable["course"]
+
+        if title != "[-1]":
+            collectionCourse.update_one({"_id": ObjectId(idCource)}, {"title": title})
+        
+        client.close()
+        return True
+
+    def DeleteCource(self, idCource):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionCourse = dbTable["course"]
+        collectionLection = dbTable["lection"]
+
+        collectionCourse.delete_one({"_id": ObjectId(idCource)})
+        collectionLection.delete_many({"idCourse": idCource})
+        return True
 
 
     
