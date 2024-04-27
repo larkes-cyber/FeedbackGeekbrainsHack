@@ -12,13 +12,11 @@ class Answer(BaseModel):
 
 
 # Request, запросы приходящие на сервак 
-class RequestFetchTokenQestion(BaseModel):
+class RequestFetchQestionByIdxLection(BaseModel):
     idLesson: int
 
-class RequestFetchQestionByToken(BaseModel):
-    token: str
-
-class RequestAnswerQestionByToken(BaseModel):
+class RequestAnswerQestionIdxLection(BaseModel):
+    idLesson: int
     qestion: List[Answer]
 
     model_config = {
@@ -34,10 +32,7 @@ class RequestAnswerQestionByToken(BaseModel):
 
 
 # Response, ответы исходящие с серавка 
-class ResponseFetchTokenQestion(BaseModel):
-    token: str
-
-class ResponseFetchQestionByToken(BaseModel):
+class ResponseFetchQestionByIdxLection(BaseModel):
     qestion: List[Qestion]
 
     model_config = {
@@ -51,5 +46,5 @@ class ResponseFetchQestionByToken(BaseModel):
         }
     }
 
-class ResponseAnswerQestionByToken(BaseModel):
+class ResponseAnswerQestionIdxLection(BaseModel):
     status: bool

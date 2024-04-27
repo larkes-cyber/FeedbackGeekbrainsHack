@@ -26,7 +26,7 @@ class LectionRecommendation(BaseModel):
 
 # Request, запросы приходящие на сервак 
 class RequestFetchLection(BaseModel):
-    idCourse: int
+    title: str
 
 class RequestFetchLectionMain(BaseModel):
     idLection: int
