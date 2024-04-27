@@ -47,7 +47,7 @@ class LectionRepository{
     }
 
     async addQuestion(question){
-        this._questionDataSource.addQuestion(question);
+       return this._questionDataSource.addQuestion(question);
     }
 
     async deleteQuestion(idQuestion){

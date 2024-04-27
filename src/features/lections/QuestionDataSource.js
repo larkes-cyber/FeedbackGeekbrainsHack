@@ -36,8 +36,8 @@ class QuestionDataSource{
     }
 
     async addQuestion(questionRequest){
-        const data = await fetch(`${this._api}/addQuestion`, {
-            method: 'PUT',
+        const data = await fetch(`${this._api}addQestion`, {
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json;charset=utf-8'
             },

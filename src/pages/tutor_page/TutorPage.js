@@ -189,8 +189,12 @@ const TutorPage = () => {
                                   {questions != null ? <QuestionView
                                    questions={questions}
                                    addQuestionCallback={(question) => {
-        
-                                     refreshQuestions();
+                                     lectionRepository.addQuestion({
+                                        idLection:selectedLection,
+                                        question:question
+                                     }).then(res => {
+                                        refreshQuestions();
+                                     })
                                    }}
                                     /> : null} 
                                 </CustomTabPanel>
