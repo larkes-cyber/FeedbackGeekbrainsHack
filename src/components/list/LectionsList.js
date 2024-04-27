@@ -15,20 +15,21 @@ import { Card } from '@mui/material';
 const LectionsList = (props) => {
 
     const [items, setItems] = useState([]);
-
+    const [selectedLection, setSelectedLection] = useState(null);
    
+
+
 
     useEffect(() => {
         let newItems = [];
         props.items.forEach(element => {
             newItems.push(
-                <ExpendLection course={element.course} lections={element.lections} lectionCallback={props.lectionCallback} />
+                <ExpendLection course={element.course} lections={element.lections} lectionCallback={(id) => props.lectionCallback(id)} selectedLection={props.selectedLection} />
             );
         });
         setItems(newItems);
-    },[]);
+    },[props]);
 
-    console.log(items)
 
     return(
         <div className='lections_list'>
@@ -67,12 +68,14 @@ const ExpendLection = (props) => {
               <List component="div" disablePadding>
               {
                 props.lections.map((item) => {
+                    console.log(props.selectedLection + " xfvxfvxv");
                     return(
                             <Card
-                                elevation={2}
+                                elevation={props.selectedLection==item.id ? 8 : 2}
                                 sx={{mb:1, ml:1, mr:5, mt:1, width:"95%" }}
                                 >
                                  <ListItemButton onClick={() => {
+
                                     props.lectionCallback(item.id);
                                 }} sx={{ padding:1}} >
                                     <ListItemText
