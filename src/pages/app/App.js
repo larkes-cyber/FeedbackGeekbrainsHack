@@ -5,6 +5,7 @@ import Spinner from "../../components/spinner/spinner";
 import StudentPage from "../student_page/StudentPage";
 import TutorPage from "../tutor_page/TutorPage";
 import './app.scss';
+import RolePage from "../role_page/RolePage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
                 <Routes>
                     <Route path="/student" element={<StudentPage/>}/>
                     <Route path="/tutor" element={<TutorPage/>}/>
+                    <Route path="/" element={<RolePage/>} />
                 </Routes>
             </Suspense>
         </main>

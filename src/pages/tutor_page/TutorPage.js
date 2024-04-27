@@ -104,6 +104,8 @@ const TutorPage = () => {
                                 console.log(e.target.value)
                             }}      
                         />
+                        {
+                        localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ?
                         <div 
                         className='tutor_page__lections__buttons' 
                         style={{
@@ -137,7 +139,8 @@ const TutorPage = () => {
                                 >
                                 Добавить лекцию
                             </Button>
-                        </div>
+                        </div> : null
+                        }
                         {
                             courses != null ? <LectionsList 
                             items={courses}

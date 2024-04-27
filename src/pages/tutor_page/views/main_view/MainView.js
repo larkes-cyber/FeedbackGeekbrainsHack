@@ -53,8 +53,8 @@ const MainView = (props) => {
             </Typography>
 
             {props.lection.tutorRec != null ?  <RecomendField label={"Рекомендации преподователю: "} content={props.lection.tutorRec} /> : null }
-            {props.lection.mentorRec != null ?  <RecomendField label={"Рекомендации ментору: "} content={props.lection.mentorRec} /> : null }
-            {props.lection.orgRec != null ?  <RecomendField label={"Рекомендации орг: "} content={props.lection.orgRec} /> : null }
+            {props.lection.mentorRec != null && (localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации ментору: "} content={props.lection.mentorRec} /> : null }
+            {props.lection.orgRec != null && (localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации орг: "} content={props.lection.orgRec} /> : null }
 
             <Button
                 component="label"

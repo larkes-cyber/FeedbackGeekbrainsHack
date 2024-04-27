@@ -79,20 +79,24 @@ const QuestionView = (props) => {
                 }
             }
             /> : null}
-            <Button
-                component="label"
-                sx={{width:"100%", height:"40px", mt:"40px"}}
-                role={undefined}
-                variant="contained"
-                color='secondary'
-                tabIndex={-1}
-                endIcon={<AddIcon/>}
-                onClick={() => {
-                    setShowQuestionForm(true);
-                }}
-                >
-                  Добавить новый вопрос
-            </Button>
+            {
+                localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ?
+                <Button
+                    component="label"
+                    sx={{width:"100%", height:"40px", mt:"40px"}}
+                    role={undefined}
+                    variant="contained"
+                    color='secondary'
+                    tabIndex={-1}
+                    endIcon={<AddIcon/>}
+                    onClick={() => {
+                        setShowQuestionForm(true);
+                    }}
+                    >
+                    Добавить новый вопрос
+                </Button>
+                : null
+            }
         </List>
     )
 

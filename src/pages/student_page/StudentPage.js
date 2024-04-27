@@ -128,7 +128,7 @@ const StudentPage = () => {
                             <IconButton  sx={{width:"4%"}} onClick={() => {
                                    addNewMessage(true, textField);   
                                    setTextField("");
-                                   addBotMessage();    
+                                   addBotMessage();
                             }}>
                                 <DoneIcon />
                             </IconButton>

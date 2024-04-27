@@ -8,6 +8,7 @@ class LectionRepository{
     _questionDataSource = new QuestionDataSource();
 
 
+
     async fetchAllLectionsCourses(){
         const output = []
         const courses = await this._lectionsDataSource.fetchCourses();
@@ -36,6 +37,8 @@ class LectionRepository{
 
     async deleteQuestion(idQuestion){
         this._questionDataSource.deleteQuestion(idQuestion);
+    }
+    async addAnswer(){
     }
 }
 
