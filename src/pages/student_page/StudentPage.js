@@ -28,6 +28,8 @@ const StudentPage = () => {
     const [dynamicQuestions, setDynamicQuestions] = useState(null);
     const [filtedLections, setFiltedLections] = useState([]);
     const [filterText, setFilterText] = useState('');
+    const [answers, setAnswers] = useState([]);
+    const [chatHistory, setChatHistory] = useState([]);
 
     const lectionRepository = new LectionRepository();
 
@@ -68,6 +70,14 @@ const StudentPage = () => {
         }
     }, [questions]);
 
+    const addAnswer = (answ, question) => {
+        const tmp = answers
+        tmp.push({
+            idQestion:question.id,
+            answer:answ
+        });
+        setAnswers(tmp);
+    }
 
     const addBotMessage = () => {
         if(dynamicQuestions.length != 0){
@@ -76,14 +86,34 @@ const StudentPage = () => {
             dymQ.shift();
             setDinamicQuestions(dymQ);
         }else{
+            if(chatHistory.length != 0){
+                const output = []
+                console.log(chatHistory)
+                for(let i = 0; i < chatHistory.length-1; i+=2){
+                    output.push({
+                        idQestion:chatHistory[i].idQuestion,
+                        answer:chatHistory[i+1].message
+                    });
+                }
+                lectionRepository.addAnswer(output).then(()=>{
+                    setChatHistory([]);
+                })
+            }
             addNewMessage(false, "Спасибо, мы успешно собрали ваш отзыв!");
         }
     }
 
-    const addNewMessage = (isClient, message) => {
+    const addNewMessage = (isClient, message, idQuestion) => {
         const tmp = chatMessages;
         tmp.push(<Message isClient={isClient} message={message} key={message} />)
         setChatMessages(tmp);
+        const hst = chatHistory;
+        hst.push({
+            isClient:isClient,
+            message:message,
+            idQuestion:idQuestion
+        });
+        setChatHistory(hst);
     }
 
     return(

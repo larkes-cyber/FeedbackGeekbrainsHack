@@ -51,7 +51,7 @@ class LectionRepository{
     }
 
  
-    async addAnswer(){
+    async addAnswer(answers){
 
     }
 

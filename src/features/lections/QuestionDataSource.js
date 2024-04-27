@@ -41,6 +41,24 @@ class QuestionDataSource{
         }
     }
 
+    async addAnswer(answers){
+        const data = await fetch(`${this._api}answerQestion`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                "ngrok-skip-browser-warning": "1"
+            },
+            body:
+            JSON.stringify({
+                question:answers
+            })
+        });
+        if(data.ok) return data
+        else throw new Error("some web error")
+    }
+
     async addQuestion(questionRequest){
         const data = await fetch(`${this._api}addQestion`, {
             method: 'POST',
