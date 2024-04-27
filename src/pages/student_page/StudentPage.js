@@ -10,6 +10,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { IconButton } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
 import { Card } from '@mui/material';
+import FilteredLectionsList from '../../components/list/FilteredLectionsList';
 
 
 
@@ -25,6 +26,8 @@ const StudentPage = () => {
     const [textField, setTextField] = useState("");
     const [showChat, setShowingChat] = useState(false);
     const [dynamicQuestions, setDynamicQuestions] = useState(null);
+    const [filtedLections, setFiltedLections] = useState([]);
+    const [filterText, setFilterText] = useState('');
 
     const lectionRepository = new LectionRepository();
 
@@ -33,6 +36,14 @@ const StudentPage = () => {
             setCourses(res);
         });
     }
+
+    useEffect(() => {
+        lectionRepository.fetchFiltredLections(filterText).then(res => {
+            res.json().then(lects => {
+                setFiltedLections(lects.lection);
+            })
+        })
+    },[filterText]);
 
     useEffect(() => {
         refreshLections();
@@ -95,14 +106,23 @@ const StudentPage = () => {
                             color='secondary'
                             sx={{mt:"20px", mb:"15px", width:"95%", ml:"2%"}}
                             onChange={(e) => {
-                                console.log(e.target.value)
+                                setFilterText(e.target.value);
                             }}      
                         />
-                         {
-                            courses != null ? <LectionsList 
+                          {
+                            courses != null && filterText.length == 0  ? <LectionsList 
                             items={courses}
                              lectionCallback={(id) => {
-                              setLection(id);
+                                setLection(id);
+                            }}
+                             selectedLection={selectedLection}
+                              /> : null
+                        }
+                        {
+                            filterText.length != 0  ? <FilteredLectionsList 
+                            items={filtedLections}
+                             lectionCallback={(id) => {
+                                setLection(id);
                             }}
                              selectedLection={selectedLection}
                               /> : null
