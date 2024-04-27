@@ -3,13 +3,13 @@ from typing import List
 
 # Заготовки
 class Course(BaseModel):
-    idCourse: int
+    idCourse: str
     titleCourse: str
 
 class Lection(BaseModel):
-    idLection: int
+    idLection: str
     titleLection: str
-    idCourse: int
+    idCourse: str
     titleCourse: str
 
 class LectionInfo(BaseModel):
@@ -29,7 +29,7 @@ class RequestFetchLection(BaseModel):
     title: str
 
 class RequestFetchLectionMain(BaseModel):
-    idLection: int
+    idLection: str
 
 
 # Response, ответы исходящие с серавка 
@@ -40,7 +40,7 @@ class ResponseFetchCourse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "course": [{"idCourse": "int",
+                    "course": [{"idCourse": "string",
                                  "titleCourse": "string"}],
                 }
             ]

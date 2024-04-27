@@ -4,7 +4,6 @@ from app.router import panel, qestion
 
 app = FastAPI()
 
-
 app.include_router(panel.router)
 app.include_router(qestion.router)
 

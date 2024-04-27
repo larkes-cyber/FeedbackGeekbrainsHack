@@ -1,35 +1,34 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.db import UseDB
+from app import DB
 from app.model.panel import Course, Lection, LectionInfo, LectionRecommendation
 from app.model.panel import RequestFetchLection, RequestFetchLectionMain
 from app.model.panel import ResponseFetchCourse, ResponseFetchLection, ResponseFetchLectionMain
 
 router = APIRouter()
 
-db = UseDB()
-
 @router.get("/fetchCourse", response_model=ResponseFetchCourse)
-async def read_items():
+async def fetchCourse():
     dataCourse = list()
-    for course in db.FetchCourse():
-        newCourse = Course(idCourse=course._id, titleCourse=course.title)
+    for course in DB.FetchCourse():
+        newCourse = Course(idCourse=course.id, titleCourse=course.title)
         dataCourse.append(newCourse)
     return ResponseFetchCourse(course=dataCourse)
 
-@router.put("/fetchLection", response_model=ResponseFetchLection)
-async def read_items(app: RequestFetchLection):
+@router.put("/fetchLectionBy", response_model=ResponseFetchLection)
+async def fetchLection(app: RequestFetchLection):
     dataLection = list()
-    for lection in db.FetchLectionByTitle(app.title):
-        newLection = Lection(idLection=lection._id, idCourse=lection.idCourse, titleCourse=lection.titleCourse, titleLection=lection.title)
+    for lection in DB.FetchLectionByTitle(app.title):
+        newLection = Lection(idLection=lection.id, titleLection=lection.title, idCourse=lection.idCourse, titleCourse=lection.titleCourse)
         dataLection.append(newLection)
 
     return ResponseFetchLection(qestion=dataLection)
 
+
 @router.put("/fetchLectionMain", response_model=ResponseFetchLectionMain)
-async def read_items(app: RequestFetchLectionMain):
-    lection = db.FetchLectionByIdx(app.idLection)
-    fakeInfo = LectionInfo(title=lection.title, tutor=lection.tutor, discription=lection.discription, counterAnswer=lection.counterAnswer)
+async def fetchLectionMain(app: RequestFetchLectionMain):
+    lection = DB.FetchLectionByIdx(app.idLection)
 
-    fakeRecommendation = LectionRecommendation(tutor="test", mentor="test", org="org") # нейронка по статистике, среднее
+    info = LectionInfo(title=lection.title, tutor=lection.tutor, discription=lection.discription, counterAnswer=lection.counterAnswer)
+    recommendation = LectionRecommendation(tutor="test", mentor="test", org="org") # нейронка по статистике, среднее. Из статистики
 
-    return ResponseFetchLectionMain(info=fakeInfo, recommendation=fakeRecommendation)
+    return ResponseFetchLectionMain(info=info, recommendation=recommendation)
