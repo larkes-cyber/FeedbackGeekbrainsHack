@@ -2,13 +2,13 @@ from fastapi import APIRouter
 from app import DB
 from bson.objectid import ObjectId
 
-from app.model.panel import Course, Lection, LectionInfo, LectionRecommendation
+from app.model.panel import Course, Lection, LectionInfo, LectionRecommendation, CourseAndLection, Lection_2
 
 router = APIRouter()
 
 # Работа с курсами/лекциями
 from app.model.panel import RequestFilterLectionByTitle, RequestFilterLectionByCourse
-from app.model.panel import ResponseFileterLection, ResponseFetchCourse
+from app.model.panel import ResponseFileterLection, ResponseFetchCourse, ResponseFetchCourseAndLection
 
 from app.model.panel import ResponseFetchLectionInfo
 from app.model.panel import RequestFilterIdLection
@@ -47,6 +47,16 @@ async def fetchLectionMain(app: RequestFilterIdLection):
 
     return ResponseFetchLectionInfo(info=info, recommendation=recommendation)
 
+@router.get("/fetchCourseWithLection", response_model=ResponseFetchCourseAndLection)
+async def fetchCourse():
+    courseFilter = DB.GetAllCourse()
+    dataCourse = list()
+    for course in courseFilter:
+        dataLection = list()
+        for lection in DB.GetLectionByCourse(course.id):
+            dataLection.append(Lection_2(id=lection.id, title=lection.title, description=lection.description))
+        dataCourse.append(CourseAndLection(id=course.id, title=course.title, lection=dataLection))
+    return ResponseFetchCourseAndLection(course=dataCourse)
 
 # Работа с вопросами
 
@@ -96,3 +106,9 @@ async def editCourse(app: RequestEditLection):
 @router.post("/deleteLection")
 async def deleteCourse(app: RequestDeleteLection):
     DB.DeleteLection(app.idLection)
+
+
+# Работа со статистикой
+@router.post("/fetchStatistic")
+async def fetchStatistic(app: RequestAddLection):
+    pass

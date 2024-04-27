@@ -7,6 +7,16 @@ class Course(BaseModel):
     id: str
     title: str
 
+class Lection_2(BaseModel):
+    id: str
+    title: str
+    description: str
+
+class CourseAndLection(BaseModel):
+    id: str
+    title: str
+    lection: List[Lection_2]
+
 class Lection(BaseModel):
     id: str
     title: str
@@ -48,6 +58,23 @@ class ResponseFetchCourse(BaseModel):
                 {
                     "course": [{"id": "string",
                                 "title": "string"}],
+                }
+            ]
+        }
+    }
+
+class ResponseFetchCourseAndLection(BaseModel):
+    course: List[CourseAndLection]
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "course": [{"id": "string",
+                                "title": "string",
+                                "lection": [{"id": "string",
+                                             "title": "string",
+                                             "description": "string"}]}],
                 }
             ]
         }
