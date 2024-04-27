@@ -14,6 +14,9 @@ import LectionsList from '../../components/list/LectionsList';
 import QuestionView from './views/QuestionView';
 import LectionRepository from '../../features/lections/LectionsRepository';
 import MainView from './views/main_view/MainView';
+import Button from '@mui/material/Button';
+import AddCourseDialog from '../../components/dialog/AddCourseDialog';
+import AddLectionDialog from '../../components/dialog/AddLectionDialog';
 
 
 
@@ -27,6 +30,8 @@ const TutorPage = () => {
     const [selectedLection, setLection] = useState(null);
     const [selectedLectionMain, setSelectedLectionMain] = useState(null);
     const [questions, setQuestions] = useState(null);
+    const [showCourseDialog, setShowingCourseDialog] = useState(false);
+    const [showLectionDialog, setShowingLectionDialog] = useState(false);
 
     useEffect(() => {
         lectionRepository.fetchAllLectionsCourses().then((res) => {
@@ -56,6 +61,23 @@ const TutorPage = () => {
 
     return(
         <section className='tutor_page'>
+            {showCourseDialog ? <AddCourseDialog
+                callbackClose={() =>{
+                    setShowingCourseDialog(false);
+                }} 
+                callbackDone={()=>{
+
+                }}
+                /> : null}
+            {showLectionDialog ? <AddLectionDialog 
+            callbackClose={() =>{
+                setShowingLectionDialog(false);
+            }} 
+            callbackDone={()=>{
+
+            }}
+            courses={courses}
+            /> : null}
             <div className='container'>
                 <div className='tutor_page__wrapper'>
                     <div className='tutor_page__lections'>
@@ -76,6 +98,40 @@ const TutorPage = () => {
                                 console.log(e.target.value)
                             }}      
                         />
+                        <div 
+                        className='tutor_page__lections__buttons' 
+                        style={{
+                            width:"95%", display:"flex", flexDirection:"row", marginLeft:"2%",
+                            justifyContent:"space-between", marginBottom:"2%"
+                        }}
+                        >
+                            <Button
+                                component="label"
+                                sx={{width:"48%", height:"36px"}}
+                                role={undefined}
+                                variant="contained"
+                                color='secondary'
+                                tabIndex={-1}
+                                onClick={() => {
+                                    setShowingCourseDialog(true);
+                                }}
+                                >
+                                    Добавить курс
+                            </Button>
+                            <Button
+                                component="label"
+                                sx={{width:"48%", height:"36px"}}
+                                role={undefined}
+                                variant="contained"
+                                color='secondary'
+                                tabIndex={-1}
+                                onClick={() => {
+                                    setShowingLectionDialog(true);
+                                }}
+                                >
+                                Добавить лекцию
+                            </Button>
+                        </div>
                         {
                             courses != null ? <LectionsList 
                             items={courses}
