@@ -52,10 +52,15 @@ class LectionRepository{
         this._questionDataSource.deleteQuestion(idQuestion);
     }
     async addAnswer(){
+
     }
 
     async addCourse(title){
-        return this._lectionsDataSource.addCourse({title:title});
+        return this._lectionsDataSource.addCourse(title);
+    }
+
+    async addLection(lection){
+        return this._lectionsDataSource.addLection(lection);
     }
 }
 

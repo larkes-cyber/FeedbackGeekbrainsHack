@@ -59,7 +59,10 @@ class LectionsDataSource{
             const data = await fetch(`${this._api}fetchLectionInfo`, {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json;charset=utf-8'
+                  'Content-Type': 'application/json;charset=utf-8',
+                  'Accept': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  "ngrok-skip-browser-warning": "1"
                 },
                 body:JSON.stringify({
                     idLection:idLection
@@ -72,33 +75,49 @@ class LectionsDataSource{
         }
     }    
 
-    async addCourse(request){
-        await fetch(`${this._api}/add`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json;charset=utf-8'
-            },
-            body:JSON.stringify({
-                
-            })
-        })
-    }
-
-    async addCourse(request){
+    async addCourse(title){
         try{
-            await fetch(`${this._api}addCourse`, {
+            const data = await fetch(`${this._api}addCourse`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
+                  'Content-Type': 'application/json;charset=utf-8',
+                  'Accept': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  "ngrok-skip-browser-warning": "1"
                 },
                 body:JSON.stringify({
-                    title:request.title
+                    title:title
                 })
             })
+            if(data.ok) return await data
+            else throw await new Error("some web error")
         }catch(e){
             console.log(e);
         }
-        
+    }
+
+    async addLection(request){
+        try{
+            const data = await fetch(`${this._api}addLection`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json;charset=utf-8',
+                  'Accept': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  "ngrok-skip-browser-warning": "1"
+                },
+                body:JSON.stringify({
+                    title:request.title,
+                    description:request.description,
+                    tutor:request.tutor,
+                    idCourse:request.idCourse
+                })
+            })
+            if(data.ok) return await data
+            else throw await new Error("some web error")
+        }catch(e){
+            console.log(e);
+        }
     }
 
 }

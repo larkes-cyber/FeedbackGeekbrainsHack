@@ -18,11 +18,14 @@ const AddLectionDialog = (
     const [open, setOpen] = React.useState(true);
     const [age, setAge] = React.useState('');
     const [courses, setCourses] = React.useState(null);
+    const [title, setTitle] = React.useState("");
+    const [descr, setDescr] = React.useState("");
+    const [tutor, setTutor] = React.useState("");
 
     React.useEffect(() => {
         const list = []
         props.courses.forEach(item => {
-            list.push(<MenuItem value={10}>{item.course.name}</MenuItem>)
+            list.push(<MenuItem value={item.id}>{item.title}</MenuItem>)
         });
         setCourses(list);
     }, props);
@@ -47,7 +50,12 @@ const AddLectionDialog = (
             const formJson = Object.fromEntries(formData.entries());
             const email = formJson.email;
             console.log(email);
-            props.callbackDone();
+            props.callbackDone({
+              idCourse:age,
+              title:title,
+              description:descr,
+              tutor:tutor
+            });
           },
         }}
       >
@@ -77,6 +85,38 @@ const AddLectionDialog = (
             name="email"
             label="Введите название лекции"
             fullWidth
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}  
+            variant="standard"
+          />
+          <TextField
+            autoFocus
+            required
+            color='secondary'
+            margin="dense"
+            id="name"
+            name="email"
+            label="Введите перподователя лекции"
+            fullWidth
+            onChange={(e) => {
+              setTutor(e.target.value);
+            }}  
+            variant="standard"
+          />
+           <TextField
+            autoFocus
+            required
+            color='secondary'
+            margin="dense"
+            id="name"
+            name="email"
+            onChange={(e) => {
+              setDescr(e.target.value);
+            }}  
+            label="Введите описание лекции"
+            fullWidth
+            multiline
             variant="standard"
           />
         </DialogContent>

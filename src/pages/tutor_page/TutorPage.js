@@ -73,15 +73,20 @@ const TutorPage = () => {
                 }} 
                 callbackDone={(title)=>{
                     setShowingCourseDialog(false);
-                    lectionRepository.addCourse(title).then(res => console)
+                    lectionRepository.addCourse(title).then(res => {
+                        refreshLections();
+                    })
                 }}
                 /> : null}
             {showLectionDialog ? <AddLectionDialog 
             callbackClose={() =>{
                 setShowingLectionDialog(false);
             }} 
-            callbackDone={()=>{
+            callbackDone={(lection)=>{
                 setShowingLectionDialog(false);
+                lectionRepository.addLection(lection).then(res=>{
+                    refreshLections();
+                })
             }}
             courses={courses}
             /> : null}
