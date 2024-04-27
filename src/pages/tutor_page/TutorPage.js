@@ -42,16 +42,21 @@ const TutorPage = () => {
 
     useEffect(() => {
         if(selectedLection != null){
-            lectionRepository.fetchLectionMain(selectedLection).then(res => {
-                setSelectedLectionMain(res);
-            })
-            lectionRepository.fetchQuestions().then((res) => {
-                setQuestions(res);
-            })
-            
-    }
+            refreshLections()
+            refreshQuestions();
+        }
     }, [selectedLection]);
 
+    const refreshQuestions = () => {
+        lectionRepository.fetchQuestions().then((res) => {
+            setQuestions(res);
+        })
+    }
+    const refreshLections = () => {
+        lectionRepository.fetchLectionMain(selectedLection).then(res => {
+            setSelectedLectionMain(res);
+        })
+    }
   
     const handleChange = (event, newValue) => {
       setTabs(newValue);
@@ -169,7 +174,13 @@ const TutorPage = () => {
                                     </div>
                                 </CustomTabPanel>
                                 <CustomTabPanel value={tabs} index={2}>
-                                  {questions != null ? <QuestionView questions={questions} /> : null} 
+                                  {questions != null ? <QuestionView
+                                   questions={questions}
+                                   addQuestionCallback={(question) => {
+                                     
+                                     refreshQuestions();
+                                   }}
+                                    /> : null} 
                                 </CustomTabPanel>
                         </Box>
                     </div>

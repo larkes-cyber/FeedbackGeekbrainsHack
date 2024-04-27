@@ -24,6 +24,7 @@ const QuestionView = (props) => {
 
     const [questions, setQuestions] = useState(null);
     const [showQuestionForm, setShowQuestionForm] = useState(false);
+    const [formData, setFormData] = useState("");
 
     useEffect(() => {
         const newArr = [];
@@ -37,10 +38,17 @@ const QuestionView = (props) => {
                      element.question
                     }
                 />
-                <IconButton  sx={{mr:1}}>
+                <IconButton  
+                sx={{mr:1}}
+                onClick={()=>{
+                    props.onDeleteQuestion(element.id);
+                }}
+                >
                   <BorderColorIcon/>
                 </IconButton>
-                <IconButton  sx={{mr:1}}>
+                <IconButton
+                  sx={{mr:1}}
+                  >
                    <ClearIcon/>
                 </IconButton>
             </Card>);
@@ -61,7 +69,13 @@ const QuestionView = (props) => {
                 }}
             doneCallback={
                 () => {
+                    props.addQuestionCallback(formData);
                     setShowQuestionForm(false);
+                }
+            }
+            onFormChange={
+                (value)=>{
+                    setFormData(value);
                 }
             }
             /> : null}
@@ -98,6 +112,9 @@ const NewQuestionForm = (props) => {
                 sx={{width:"90%", mb:1, ml:1, mt:1}} 
                 variant="standard" 
                 color='secondary'
+                onChange={(e)=>{
+                    props.onFormChange(e.target.value);
+                }}
                 />
             <IconButton onClick={() => {
                 props.doneCallback();

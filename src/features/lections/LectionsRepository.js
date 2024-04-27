@@ -30,6 +30,13 @@ class LectionRepository{
         return this._questionDataSource.fetchQuestions("12345");
     }
 
+    async addQuestion(question){
+        this._questionDataSource.addQuestion(question);
+    }
+
+    async deleteQuestion(idQuestion){
+        this._questionDataSource.deleteQuestion(idQuestion);
+    }
 }
 
 export default LectionRepository;
