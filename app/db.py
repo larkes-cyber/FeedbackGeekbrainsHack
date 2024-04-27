@@ -1,50 +1,44 @@
 import pymongo
-from bson.objectid import ObjectId
-
 from pydantic import BaseModel
 from typing import List
+from bson.objectid import ObjectId
+from datetime import datetime
 
 # Заготовки
-class Qestion(BaseModel):
-    idQesion: str
-    qestion: str
-
-class CollectionLection(BaseModel):
+class Course(BaseModel):
     id: str
     title: str
+
+class Question(BaseModel):
+    id: str
+    question: str
+
+class Answer(BaseModel):
+    question: str
+    answer: str
+
+class Feedback(BaseModel):
+    id: str
+    answer: List[Answer]
+    is_relevant: int
+    is_positive: int
+    object: int
+    time: datetime
+
+class Lection(BaseModel):
+    id: str
+    title: str
+    idCourse: str
+    titleCourse: str
+
     description: str
     tutor: str
     countAnswer: int
-    idCourse: str
-    titleCourse: str
-    idQuestion: List[str]
-    idStatistic: str
 
-class CollectionCourse(BaseModel):
-    id: str
-    title: str
+    question: List[Question]
+    feedback: List[Feedback]
 
-class CollectionQuesion(BaseModel):
-    id: str
-    title: str
 
-class CollectionStatistic(BaseModel):
-    id: str
-    tutor: str
-    metodist: str
-    org: str
-    pass
-
-# myclient = pymongo.MongoClient('mongodb://localhost:27017/')
-# myclient.drop_database("test")
-
-# # appdb = myclient["test"]
-# # appcoll = appdb["blogcollection"]
-# # document = {"user_id": 1, "user": "test"}
-# # appcoll.insert_one(document)
-
-# print(myclient.list_database_names())
-# myclient.close()
 sampleCollectionCourse = {"title": "sample"}
 
 sampleCollectionLection = {"title": "sample", 
@@ -53,298 +47,244 @@ sampleCollectionLection = {"title": "sample",
                            "countAnswer": "semple",
                            "idCourse": -1,
                            "titleCourse": "creater",
-                           "idQuestion": [str(-1)], 
-                           "idStatistic": -1
+                           "question": [{"idQuestion": ObjectId(), "question": "some"}], 
+                           "feedback": [{"idFeedbak": ObjectId(), "answer": [{"question": "some", "answer": "some"}], "is_relevant": 0, "is_positive": 2, "object": 3, "time": datetime.time}]
                            }
 
-sampleCollectionSession = {"id": -1,
-                           "title": "creater"
-                           }
-
-sampleCollectionQestion = {"id": -1,
-                           "title": "creater"
-                           }
-
-filterQestion = "На шкале от 1 до 10, насколько вы готовы поделиться вашим мнением о вебинаре?"
+filterQestion = "На шкале от 1 до 10, насколько вы готовы поделиться вашим мнением о вебинаре?" # 000000000000000000000000
 class UseDB():
     def __init__(self, session):
         self.session = session
+    
+    def RemoveDB(self):
+        client = pymongo.MongoClient(self.session)
+        client.drop_database("feedback")
+        print(client.list_database_names())
     
     def CreateDB(self):
         client = pymongo.MongoClient(self.session)
         if "feedback" not in client.list_database_names():
             dbTable = client["feedback"]
-
             collectionCourse = dbTable["course"]
             collectionLection = dbTable["lection"]
-            collectionQestion = dbTable["qestion"]
-
-            collectionSession = dbTable["session"]
 
             collectionCourse.insert_one(sampleCollectionCourse)
             collectionLection.insert_one(sampleCollectionLection)
-            collectionSession.insert_one(sampleCollectionSession)
-        
         client.close()
     
-    
-    def FetchCourse(self):
+    def GetQestion(self, idLection) -> List[Question]:
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionCourse = dbTable["course"]
-        data = list()
+        collection = client.feedback.lection
 
-        for element in collectionCourse.find():
-            collectionCourse = CollectionCourse(id=str(element["_id"]), title=element["title"])
-            data.append(collectionCourse)
+        lection = collection.find_one({"_id": ObjectId(idLection)})
+
+        dataQestion = list()
+
+        for question in lection["question"]:
+            dataQestion.append(Question(id=str(question["idQuestion"]), question=question["question"]))
         
         client.close()
-        return data 
+
+        return dataQestion
     
-    def FetchCourseByIdx(self, idCourse):
+    def CreateBaseQestion(self, idLection):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionCourse = dbTable["course"]
-        element = collectionCourse.find_one({"_id": ObjectId(idCourse)})
+        collection = client.feedback.lection
 
-        response = CollectionCourse(id=idCourse, title=element["title"])
+        dataBaseQestion = [
+            {"idQuestion": ObjectId('000000000000000000000000'), "question": "На шкале от 1 до 10, насколько вы готовы поделиться вашим мнением о вебинаре?"},
+            {"idQuestion": ObjectId(), "question": "Что вам больше всего понравилось в теме вебинара и почему?"},
+            {"idQuestion": ObjectId(), "question": "Были ли моменты в вебинаре, которые вызвали затруднения в понимании материала? Можете описать их?"},
+            {"idQuestion": ObjectId(), "question": "Какие аспекты вебинара, по вашему мнению, нуждаются в улучшении и какие конкретные изменения вы бы предложили?"},
+            {"idQuestion": ObjectId(), "question": "Есть ли темы или вопросы, которые вы бы хотели изучить более подробно в следующих занятиях?"}]
 
-        return response
+        collection.update_one({"_id": ObjectId(idLection)}, {"$set": {"question": dataBaseQestion}})
+        client.close()
     
-        
-    def FetchLectionByIdx(self, idx: str):
+    def EditQestion(self, idLection, idQestion, question):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionLection = dbTable["lection"]
-        element = collectionLection.find_one({"_id": ObjectId(idx)})
+        collection = client.feedback.lection
 
-        listQestion = list()
-        for elementQestion in element["idQuestion"]:
-            listQestion.append(str(elementQestion))
+        collection.update_one({"_id": ObjectId(idLection), "question": {"idQuestion": ObjectId(idQestion)}}, {"$push", {"question": {"question": question}}})
+        client.close()
+    
+    def AddQestion(self, idLection, questioInput):
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
+        qestionFilter = collection.find_one({"_id": ObjectId(idLection)})
+        dataQestion = list()
+        for question in qestionFilter["question"]:
+            dataQestion.append(question)
+        dataQestion.append({"idQuestion": ObjectId(), "question": questioInput})
+        collection.update_one({"_id": ObjectId(idLection)}, {"$set": {"question": dataQestion}})
+        client.close()
+    
+    def DeleteQestion(self, idLection, idQuestion):
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
 
-        response = CollectionLection(id=str(element["_id"]), title=element["title"], description=element["description"],
-                                              tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=element["idCourse"],
-                                              titleCourse=element["titleCourse"], idQuestion=listQestion, idStatistic=str(element["idStatistic"]))
+        collection.update_many({"_id": ObjectId(idLection)}, {"$pull": {"question": {"idQuestion": ObjectId(idQuestion)}}})
+        client.close()
+    
+
+    
+    def GetAnswer(self, idLection, idFeedback) -> List[Answer]:
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
+
+        lection = collection.find_one({"_id": ObjectId(idLection), "feedback": {"idFeedbak": ObjectId(idFeedback)}})
+
+        dataAnswer = list()
+        for answer in lection["feedback"]["answer"]:
+            dataAnswer.append(Answer(question=answer["question"], answer=answer["answer"]))
         
         client.close()
-        return response
-    
-        
-    def FetchLectionByIdCourse(self, idCourse:str):
+        return dataAnswer
+
+
+    def GetFeedback(self, idLection):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionLection = dbTable["lection"]
-        dataResponse = list()
+        collection = client.feedback.lection
 
-        for element in collectionLection.find({'idCourse': idCourse}):
-            listQestion = list()
-            for elementQestion in element["idQuestion"]:
-                listQestion.append(str(elementQestion))
+        lection = collection.find_one({"_id": ObjectId(idLection)})
 
-            response = CollectionLection(id=str(element["_id"]), title=element["title"], description=element["description"],
-                                              tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=element["idCourse"],
-                                              titleCourse=element["titleCourse"], idQuestion=listQestion, idStatistic=str(element["idStatistic"]))
-            dataResponse.append(response)
+        dataFeedback = list()
+        for feedback in lection["feedback"]: 
+            dataFeedback.append(Feedback(id=str(feedback["idFeedbak"]), answer=self.GetAnswer(idLection),
+                                         is_relevant=feedback["is_relevant"], is_positive=feedback["is_positive"], object=feedback["object"],
+                                         time=feedback["time"]))
         
         client.close()
-        return dataResponse 
-
-
-    def FetchLectionByTitle(self, title:str):
+        return dataFeedback
+    
+    def AddFeedback(self, idLection, dataAnswer:List[Answer], is_relevant, is_positive, object, time):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionLection = dbTable["lection"]
-        dataResponse = list()
-        if "title" == "[-1]":
-            collectionLection.find()
+        collection = client.feedback.lection
+
+        newDataAnswer = list()
+        for answer in dataAnswer:
+            newDataAnswer.append({"question": answer.question, "answer": answer.answer})
+
+        collection.update_one({"_id": ObjectId(idLection)}, 
+                              {"$push", {"feedback": 
+                                         {"idFeedbak": ObjectId(), "answer": newDataAnswer, "is_relevant": is_relevant,
+                                          "is_positive": is_positive, "object": object, "time": time}}})
+        client.close()
+    
+    def GetLection(self, idLection) -> Lection:
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
+
+        lection = collection.find_one({"_id": ObjectId(idLection)})
+
+        client.close()
+        return Lection(id=str(lection["_id"]), title=lection["title"], idCourse=str(lection["idCourse"]), titleCourse=lection["titleCourse"],
+                       description=lection["description"], tutor=lection["tutor"], countAnswer=lection["countAnswer"],
+                       question=self.GetQestion(lection["_id"]), feedback=self.GetFeedback(lection["_id"]))
+    
+    def GetLectionByCourse(self, idCourse) -> List[Lection]:
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
+
+        lectionFilter = collection.find({"idCourse": ObjectId(idCourse)})
+
+        dataLection = list()
+        for lection in lectionFilter:
+            dataLection.append(Lection(id=str(lection["_id"]), title=lection["title"], idCourse=str(lection["idCourse"]), titleCourse=lection["titleCourse"],
+                       description=lection["description"], tutor=lection["tutor"], countAnswer=lection["countAnswer"],
+                       question=self.GetQestion(lection["_id"]), feedback=self.GetFeedback(lection["_id"])))
+        client.close()
+        return dataLection
+                       
+    
+    def GetLectionByTitle(self, title) -> List[Lection]:
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
+
+        if title == "[-1]":
+            lectionFilter = collection.find()
         else:
-            collectionLection.find({"title": title })
+            lectionFilter = collection.find({"title": title })
 
-        for element in collectionLection.find():
-            listQestion = list()
-            for elementQestion in element["idQuestion"]:
-                listQestion.append(str(elementQestion))
-            response = CollectionLection(id=str(element["_id"]), title=element["title"], description=element["description"],
-                                              tutor=element["tutor"], countAnswer=element["countAnswer"], idCourse=str(element["idCourse"]),
-                                              titleCourse=element["titleCourse"], idQuestion=listQestion, idStatistic=str(element["idStatistic"]))
-            dataResponse.append(response)
-        
+        dataLection = list()
+        for lection in lectionFilter:
+            dataLection.append(Lection(id=str(lection["_id"]), title=lection["title"], idCourse=str(lection["idCourse"]), titleCourse=lection["titleCourse"],
+                       description=lection["description"], tutor=lection["tutor"], countAnswer=lection["countAnswer"],
+                       question=self.GetQestion(lection["_id"]), feedback=self.GetFeedback(lection["_id"])))
         client.close()
-        return dataResponse 
-    
+        return dataLection
 
-    def FetchQestionByIdx(self, idx: str):
+    def AddLection(self, title, idCourse, description, tutor):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionQestion = dbTable["qestion"]
+        collectionCourse = client.feedback.course
+        collectionLection = client.feedback.lection
 
-        element = collectionQestion.find_one({"_id": ObjectId(idx)}) #  Поиск по индексу
-        print(element)
-        response = Qestion(idQesion=str(element["_id"]), qestion=element["title"])
+        course = collectionCourse.find_one({"_id": ObjectId(idCourse)})
+
+        lection = collectionLection.insert_one({"title": title, "idCourse": course["_id"], "titleCourse": course["title"],
+                                                "description": description, "tutor": tutor, "countAnswer": 0, "question": [], "feedback": []})
+        self.CreateBaseQestion(lection.inserted_id)
         client.close()
-        return response
 
-    def EditLectionQestionByIdx(self, idx: str, title: str):
+    def EditLection(self, title, idLection, description, tutor):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionQestion = dbTable["qestion"]
-
-        collectionQestion.update_one({"_id": ObjectId(idx)}, {"$set": {"title": title}})
-        client.close()
-        return True
-    
-    def DeleteLectionQestionByIdx(self, idx: str):
-        client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionQestion = dbTable["qestion"]
-        collectionLection = dbTable["lection"]
-
-        collectionQestion.delete_one({"_id": ObjectId(idx)})
-        collectionLection.update_many({}, {"$pull": {"idQuestion": ObjectId(idx)}})
-        print([i for i in collectionLection.find({"title": "Best Life"})])
-        client.close()
-        return True
-    
-    def AddLectionQestionByIdx(self, idLection: str, title: str):
-        client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionQestion = dbTable["qestion"]
-        collectionLection = dbTable["lection"]
-
-        newElement = collectionQestion.insert_one({"title": title})
-
-        lection = self.FetchLectionByIdx(idLection)
-        print(lection)
-        newQestions = list()
-        for qestion in lection.idQuestion:
-            newQestions.append(ObjectId(qestion))
-        newQestions.append(newElement.inserted_id)
-        print(newQestions)
-        collectionLection.update_one({"_id": ObjectId(lection.id)}, { "$set": {"idQuestion": newQestions}})
-
-        client.close()
-        return newElement.inserted_id
-    
-    def CreateBaseQestion(self):
-        client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionQestion = dbTable["qestion"]
-
-        q1 = collectionQestion.insert_one({"title": "Что вам больше всего понравилось в теме вебинара и почему?"})
-        q2 = collectionQestion.insert_one({"title": "Были ли моменты в вебинаре, которые вызвали затруднения в понимании материала? Можете описать их?"}) 
-        q3 = collectionQestion.insert_one({"title": "Какие аспекты вебинара, по вашему мнению, нуждаются в улучшении и какие конкретные изменения вы бы предложили?"})
-        q4 = collectionQestion.insert_one({"title": "Есть ли темы или вопросы, которые вы бы хотели изучить более подробно в следующих занятиях?"}) 
-        return [q1.inserted_id, q2.inserted_id, q3.inserted_id, q4.inserted_id]
-    
-    def CreateStatistic(self):
-        return 0 # index
-    
-    def AddLection(self, title, description, tutor, idCourse):
-        client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionLection = dbTable["lection"]
-
-        course = self.FetchCourseByIdx(idCourse)
-        idxQestion = self.CreateBaseQestion()
-        idStatistic = self.CreateStatistic()
-
-        dict = { "title": title,
-                "description": description,
-                "tutor": tutor,
-                "countAnswer": 0,
-                "idCourse": course.id,
-                "titleCourse": course.title,
-                "idQuestion": idxQestion,
-                "idStatistic": idStatistic
-                }
-
-        newElement = collectionLection.insert_one(dict)
-
-        return newElement.inserted_id
-
-    def EditLection(self, title, description, tutor, idLection):
-        client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionLection = dbTable["lection"]
+        collection = client.feedback.lection
 
         if title != "[-1]":
-            collectionLection.update_one({"_id": ObjectId(idLection)}, { "$set": {"title": title}})
+            collection.update_one({"_id": ObjectId(idLection)}, { "$set": {"title": title}})
         if description != "[-1]":
-            collectionLection.update_one({"_id": ObjectId(idLection)}, { "$set": {"description": description}})
+            collection.update_one({"_id": ObjectId(idLection)}, { "$set": {"description": description}})
         if tutor != "[-1]":
-            collectionLection.update_one({"_id": ObjectId(tutor)}, { "$set": {"title": tutor}})
-        
+            collection.update_one({"_id": ObjectId(idLection)}, { "$set": {"title": tutor}})
+    
         client.close()
-        return True
-
+    
     def DeleteLection(self, idLection):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionLection = dbTable["lection"]
+        collectionLection = client.feedback.lection
 
         collectionLection.delete_one({"_id": ObjectId(idLection)})
-        return True
+        client.close()
     
-    def AddCource(self, title):
+    def GetCourse(self, idCourse) -> Course:
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionCourse = dbTable["course"]
+        collection = client.feedback.course
 
-        newElement = collectionCourse.insert_one({"title": title})
+        course = collection.find_one({"_id": ObjectId(idCourse)})
+        client.close()
+        return Course(id=str(course["_id"]), title=course["title"])
 
-        return newElement.inserted_id
-
-    def EditCource(self, title, idCource):
+    def GetAllCourse(self) -> List[Course]:
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionCourse = dbTable["course"]
+        collection = client.feedback.course
 
-        # myquery = { "address": "Valley 345" }
-        # newvalues = { "$set": { "address": "Canyon 123" } }
-
-        if title != "[-1]":
-            collectionCourse.update_one({"_id": ObjectId(idCource)}, { "$set": {"title": title}})
+        dataCourse = list()
+        for course in collection.find():
+            dataCourse.append(Course(id=str(course["_id"]), title=course["title"]))
         
         client.close()
-        return True
-
-    def DeleteCource(self, idCource):
+        return dataCourse
+    
+    def AddCourse(self, title):
         client = pymongo.MongoClient(self.session)
-        dbTable = client["feedback"]
-        collectionCourse = dbTable["course"]
-        collectionLection = dbTable["lection"]
+        collection = client.feedback.course
 
-        collectionCourse.delete_one({"_id": ObjectId(idCource)})
-        collectionLection.delete_many({"idCourse": idCource})
-        return True
-
-
+        collection.insert_one({"title": title})
+        client.close()
     
-    # def FetchCourseByIdx(self, idx):
-    #     client = pymongo.MongoClient(self.session)
-    #     dbTable = client["feedback"]
-    #     collectionCourse = dbTable["course"]
-    #     return collectionCourse.findOne({"_id", idx})
+    def DeleteCourse(self, idCourse):
+        client = pymongo.MongoClient(self.session)
+        collectionLection = client.feedback.lection
+        collectionCourse = client.feedback.course
+        
+        collectionCourse.delete_one({"_id": ObjectId(idCourse)})
+        collectionLection.delete_many({"idCourse": ObjectId(idCourse)})
+        client.close()
     
-    # def FetchLectionByCourse(self):
-    #     client = pymongo.MongoClient(self.session)
-    #     dbTable = client["feedback"]
-    #     collectionLection = dbTable["lection"]
-    #     data = list()
+    def EditCourse(self, title, idCourse):
+        client = pymongo.MongoClient(self.session)
+        collectionCourse = client.feedback.course
 
-    #     for element in collectionCourse.find():
-    #         data.append(element)
-            
-    #     return data 
-
-    # def FetchLectionByTitle(self, title):
-    #     client = pymongo.MongoClient(self.session)
-    #     dbTable = client["feedback"]
-    #     collectionLection = dbTable["lection"]
-    #     data = list()
-
-    #     for element in collectionLection.find({'title':{'$regex':title}}):
-    #         data.append(element)
-            
-    #     return data 
-
+        collectionCourse.update_one({"_id": ObjectId(idCourse)}, { "$set": {"title": title}})
+        client.close()
+        

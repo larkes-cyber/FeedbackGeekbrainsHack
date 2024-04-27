@@ -1,14 +1,16 @@
 from pydantic import BaseModel
 from typing import List
 
+
 # Заготовки
 class Course(BaseModel):
-    idCourse: str
-    titleCourse: str
+    id: str
+    title: str
 
 class Lection(BaseModel):
-    idLection: str
-    titleLection: str
+    id: str
+    title: str
+    description: str
     idCourse: str
     titleCourse: str
 
@@ -24,16 +26,17 @@ class LectionRecommendation(BaseModel):
     org: str
 
 
+###### Подгрузка лекций/курсов
 # Request, запросы приходящие на сервак 
-class RequestFetchLectionByIdCourse(BaseModel):
-    idCourse: str
 
-class RequestFetchLection(BaseModel):
-    title: str
-
-class RequestFetchLectionMain(BaseModel):
+class RequestFilterIdLection(BaseModel):
     idLection: str
 
+class RequestFilterLectionByTitle(BaseModel):
+    title: str
+
+class RequestFilterLectionByCourse(BaseModel):
+    idCourse: str
 
 # Response, ответы исходящие с серавка 
 class ResponseFetchCourse(BaseModel):
@@ -43,30 +46,32 @@ class ResponseFetchCourse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "course": [{"idCourse": "string",
-                                 "titleCourse": "string"}],
+                    "course": [{"id": "string",
+                                "title": "string"}],
                 }
             ]
         }
     }
 
-class ResponseFetchLection(BaseModel):
+class ResponseFileterLection(BaseModel):
     lection: List[Lection]
 
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "lection": [{"idLection": "int",
+                    "lection": [{"idLection": "string",
                                  "titleLection": "string",
-                                 "idCourse": "int",
+                                 "description": "string",
+                                 "idCourse": "string",
                                  "titleCourse": "string"}],
                 }
             ]
         }
     }
 
-class ResponseFetchLectionMain(BaseModel):
+
+class ResponseFetchLectionInfo(BaseModel):
     info: LectionInfo
     recommendation: LectionRecommendation
 
@@ -89,3 +94,49 @@ class ResponseFetchLectionMain(BaseModel):
             ]
         }
     }
+
+
+###### Работа с Вопросам
+# Request, запросы приходящие на сервак 
+class RequestEditQestion(BaseModel):
+    idLection: str
+    question: str
+    idQuestion: str
+
+class RequestAddQestion(BaseModel):
+    idLection: str
+    question: str
+
+class RequestDeleteQestion(BaseModel):
+    idLection: str
+    idQuestion: str
+
+
+###### Работа с Курсами
+# Request, запросы приходящие на сервак 
+class RequestEditCourse(BaseModel):
+    idCourse: str
+    title: str
+
+class RequestAddCourse(BaseModel):
+    title: str
+
+class RequestDeleteCourse(BaseModel):
+    idCourse: str
+
+###### Работа с Лекциями
+# Request, запросы приходящие на сервак 
+class RequestEditLection(BaseModel):
+    idLection: str 
+    title: str
+    description: str
+    tutor: str
+
+class RequestAddLection(BaseModel):
+    title: str
+    description: str
+    tutor: str
+    idCourse: str
+
+class RequestDeleteLection(BaseModel):
+    idLection: str
