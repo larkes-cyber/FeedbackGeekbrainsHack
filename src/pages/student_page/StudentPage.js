@@ -59,10 +59,14 @@ const StudentPage = () => {
 
 
     const addBotMessage = () => {
-        addNewMessage(false, dynamicQuestions[0].question);
-        const dymQ = dynamicQuestions;
-        dymQ.shift();
-        setDinamicQuestions(dymQ);
+        if(dynamicQuestions.length != 0){
+            addNewMessage(false, dynamicQuestions[0].question);
+            const dymQ = dynamicQuestions;
+            dymQ.shift();
+            setDinamicQuestions(dymQ);
+        }else{
+            addNewMessage(false, "Спасибо, мы успешно собрали ваш отзыв!");
+        }
     }
 
     const addNewMessage = (isClient, message) => {
@@ -105,7 +109,7 @@ const StudentPage = () => {
                         }
                     </div>
                     <div className='student_page__chat'>
-                        <div style={{height:"75%", display:"flex", flexDirection:"column"}} className='student_page__chat__view'>
+                        <div style={{height:"75%", display:"flex", flexDirection:"column", marginBottom:"3%"}} className='student_page__chat__view'>
                             {chatMessages}
                         </div>
 
@@ -152,7 +156,7 @@ const Message = (props) => {
 
             <Card
                 elevation={2}
-                sx={{mb:1, ml:1, mr:5, mt:1, width:"40%",p:1 }}
+                sx={{mb:1, ml:1, mr:5, mt:1, p:1, minWidth:"30%" }}
                 key={props.message}
                 >
                 <ListItemText

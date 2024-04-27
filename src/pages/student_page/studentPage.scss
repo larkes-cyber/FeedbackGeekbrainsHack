@@ -19,8 +19,10 @@
     &__chat{
         
         width: 60%;
-        height: 90vh;
+        height: 100vh;
         &__view{
+            height: 80%;
+            overflow-y: scroll;
         }
     }
 }
