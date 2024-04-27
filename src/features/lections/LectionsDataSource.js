@@ -1,7 +1,7 @@
 
 class LectionsDataSource{
 
-    _api = "https://4851-185-6-247-97.ngrok-free.app/";
+    _api = "https://22be-185-6-247-97.ngrok-free.app/";
 
     async fetchCourses(){
         try{
@@ -37,28 +37,38 @@ class LectionsDataSource{
         else throw await new Error("some web error")
     }
 
+    async fetchCoursesWithLections(){
+        try{
+            const data = await fetch(`${this._api}fetchCourseWithLection`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json;charset=utf-8',
+                  'Accept': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  "ngrok-skip-browser-warning": "1"
+                }
+            });
+            return await data;
+        }catch(e){
+            console.log(e);
+        }
+    }
 
     async fetchLectionMain(idLection){
-        // const data = await fetch(`${this._api}/fetchLectionMain`, {
-        //     method: 'PUT',
-        //     headers: {
-        //       'Content-Type': 'application/json;charset=utf-8'
-        //     },
-        //     body:JSON.stringify({
-        //         idLection:idLection
-        //     })
-        // })
-        // if(data.ok) return await data.body
-        // else throw await new Error("some web error")
-        return {
-            id:idLection,
-            name:"Основы программирования",
-            tutor:"Славик Очков Телкович",
-            description:"Прото́н — одна из трёх элементарных частиц, из которых построено обычное вещество. Протоны входят в состав атомных ядер; порядковый номер химического элемента в таблице Менделеева равен количеству протонов в его ядре. В физике протон. ",
-            tutorRec:"Не быть тормозом",
-            mentorRec:"Подумать над увлоьнением",
-            orgRec:"Неисправность с микрофоном 15 лекция",
-            answCount:15
+        try{
+            const data = await fetch(`${this._api}/fetchLectionInfo`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json;charset=utf-8'
+                },
+                body:JSON.stringify({
+                    idLection:idLection
+                })
+            })
+            if(data.ok) return await data.body
+            else throw await new Error("some web error")
+        }catch(e){
+
         }
     }    
 

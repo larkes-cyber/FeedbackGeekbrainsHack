@@ -10,24 +10,29 @@ class LectionRepository{
 
 
     async fetchAllLectionsCourses(){
-        const output = []
-        const courses = await this._lectionsDataSource.fetchCourses();
-        const parsed = await courses.json();
-        await parsed.course.forEach(course => {
-            this._lectionsDataSource.fetchLections(course.id).then(res => {
-                res.json().then((res) => {
-                    output.push({
-                        course:course,
-                        lections:res.lection
-                    })
-                })
-            })
-        });
-        return await output;
+        const courses = await this._lectionsDataSource.fetchCoursesWithLections();
+        const parsedCourses = await courses.json();
+        return await parsedCourses.course;
     }
 
+    // id:idLection,
+    // name:"Основы программирования",
+    // tutor:"Славик Очков Телкович",
+    // description:"Прото́н — одна из трёх элементарных частиц, из которых построено обычное вещество. Протоны входят в состав атомных ядер; порядковый номер химического элемента в таблице Менделеева равен количеству протонов в его ядре. В физике протон. ",
+    // tutorRec:"Не быть тормозом",
+    // mentorRec:"Подумать над увлоьнением",
+    // orgRec:"Неисправность с микрофоном 15 лекция",
+    // answCount:15
+
     async fetchLectionMain(idLection){
-        return await this._lectionsDataSource.fetchLectionMain(idLection);
+        const data = await this._lectionsDataSource.fetchLectionMain(idLection);
+        const parsedData = await data.json();
+        const setupData = await {
+            id:idLection,
+            name:parsedData.title,
+           // tutor:
+        }
+        return await setupData;
     }
 
     async fetchQuestions(idLection){

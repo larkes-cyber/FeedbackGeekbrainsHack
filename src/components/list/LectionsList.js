@@ -18,16 +18,15 @@ const LectionsList = (props) => {
     const [items, setItems] = useState([]);
     const [selectedLection, setSelectedLection] = useState(null);
    
-
-
-
-
     useEffect(() => {
         let newItems = [];
         console.log(props.items);
         props.items.forEach(element => {
             newItems.push(
-                <ExpendLection course={element.course} lections={element.lections} lectionCallback={(id) => props.lectionCallback(id)} selectedLection={props.selectedLection} />
+                <ExpendLection course={{
+                    title:element.title,
+                    courseId:element.id
+                }} lections={element.lection} lectionCallback={(id) => props.lectionCallback(id)} selectedLection={props.selectedLection} />
             );
         });
         setItems(newItems);
