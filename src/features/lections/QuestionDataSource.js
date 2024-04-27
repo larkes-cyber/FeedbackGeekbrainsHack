@@ -1,6 +1,6 @@
 class QuestionDataSource{
 
-    _api = "http://lolka.com";
+    _api = "https://22be-185-6-247-97.ngrok-free.app/";
 
     async fetchToken(idLection){
         const data = await fetch(`${this._api}/fetchTokenQuestion`, {
@@ -17,25 +17,22 @@ class QuestionDataSource{
     }
 
     async fetchQuestions(lectionId){
-        // const data = await fetch(`${this._api}/fetchTokenQuestion`, {
-        //     method: 'PUT',
-        //     headers: {
-        //       'Content-Type': 'application/json;charset=utf-8'
-        //     },
-        //     body:
-        //     JSON.stringify({
-        //         token:token
-        //     })
-        // });
-        // if(data.ok) return data.body
-        // else throw new Error("some web error")
-        return [
-            {id:"1234", question:"Очень важный вопрос"},
-            {id:"123", question:"Очень важный "},
-            {id:"12345", question:"Очень  "},
-            {id:"12347", question:"Очень важный вопрос"},
-            {id:"12349", question:"Очень важный вопрос"}
-        ]
+        try{
+            const data = await fetch(`${this._api}fetchQestion`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json;charset=utf-8'
+                },
+                body:
+                JSON.stringify({
+                    idLection:lectionId
+                })
+            });
+            if(data.ok) return data
+            else throw new Error("some web error")
+        }catch(e){
+
+        }
     }
 
     async addQuestion(questionRequest){

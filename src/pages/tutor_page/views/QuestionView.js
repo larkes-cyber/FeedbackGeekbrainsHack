@@ -54,7 +54,7 @@ const QuestionView = (props) => {
             </Card>);
         });
         setQuestions(newArr);
-    }, []);
+    }, [props]);
 
     return(
         <List 

@@ -35,7 +35,6 @@ const TutorPage = () => {
 
     useEffect(() => {
         refreshLections();
-        refreshQuestions();
     }
     ,[]);
 
@@ -45,13 +44,16 @@ const TutorPage = () => {
             lectionRepository.fetchLectionMain(selectedLection).then(res => {
                 setSelectedLectionMain(res);
             })
+            refreshQuestions();
         }
     }, [selectedLection]);
 
     const refreshQuestions = () => {
-        lectionRepository.fetchQuestions().then((res) => {
-            setQuestions(res);
-        })
+        if(selectedLection != null){
+            lectionRepository.fetchQuestions(selectedLection).then((res) => {
+                setQuestions(res);
+            })
+        }
     }
     const refreshLections = () => {
         lectionRepository.fetchAllLectionsCourses().then((res) => {
