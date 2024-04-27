@@ -75,7 +75,6 @@ class UseDB():
     def GetQestion(self, idLection) -> List[Question]:
         client = pymongo.MongoClient(self.session)
         collection = client.feedback.lection
-
         lection = collection.find_one({"_id": ObjectId(idLection)})
 
         dataQestion = list()
@@ -204,7 +203,7 @@ class UseDB():
         if title == "[-1]":
             lectionFilter = collection.find()
         else:
-            lectionFilter = collection.find({"title": title })
+            lectionFilter = collection.find({"title": {"$regex" : title, "$options": "i"}})
 
         dataLection = list()
         for lection in lectionFilter:
@@ -225,6 +224,7 @@ class UseDB():
                                                 "description": description, "tutor": tutor, "countAnswer": 0, "question": [], "feedback": []})
         self.CreateBaseQestion(lection.inserted_id)
         client.close()
+        return lection.inserted_id
 
     def EditLection(self, title, idLection, description, tutor):
         client = pymongo.MongoClient(self.session)
@@ -269,8 +269,9 @@ class UseDB():
         client = pymongo.MongoClient(self.session)
         collection = client.feedback.course
 
-        collection.insert_one({"title": title})
+        idx = collection.insert_one({"title": title})
         client.close()
+        return idx.inserted_id
     
     def DeleteCourse(self, idCourse):
         client = pymongo.MongoClient(self.session)

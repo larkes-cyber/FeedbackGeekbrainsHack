@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.router import panel, question
+from app.router import panel, question, exportAndImport
 
 app = FastAPI()
 
@@ -11,6 +11,7 @@ app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True
 
 app.include_router(panel.router)
 app.include_router(question.router)
+app.include_router(exportAndImport.router)
 
 
 @app.get("/")

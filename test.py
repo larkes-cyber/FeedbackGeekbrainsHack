@@ -1,4 +1,4 @@
+from datetime import datetime
 from bson.objectid import ObjectId
 
-print(ObjectId())
-print(ObjectId('000000000000000000000000'))
+print(datetime.strptime("24-04-01 08:30:00", '%Y-%m-%d %H:%M:%S'))

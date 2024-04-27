@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from app import DB
-from bson.objectid import ObjectId
 
 from app.model.panel import Course, Lection, LectionInfo, LectionRecommendation, CourseAndLection, Lection_2
 

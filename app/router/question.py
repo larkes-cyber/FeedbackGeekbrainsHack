@@ -1,5 +1,7 @@
+from datetime import datetime
 from fastapi import APIRouter
 from app import DB
+from app.db import Answer
 
 from bson.objectid import ObjectId
 
@@ -16,10 +18,17 @@ async def fetchQestion(app: RequestFetchQestion):
 
 @router.post("/answerQestion")
 async def answerQestion(app: RequestAnswerQestion):
-    question = DB.GetQestion(idLection=app.idLection)
+    questionFilter = DB.GetQestion(idLection=app.idLection)
+    lection = DB.GetLection(idLection=app.idLection)
 
-    # Составить вопрос ответ
-    # Сделать подколючение к нейронке
+    dataQestionAndAnswer = list()
+    dataQestionAndAnswer.append(Answer(qestion="О каком вебинаре Вы хотите рассказать?", answer=lection.title))
 
-    # lection = DB.FetchLectionByIdx(app.idLesson) # Сделать провеку
-    # fakeData = [Question(idQesion=1, question="тест"), Question(idQesion=2, question="тест")] # Получение вопросов лекции
+    for answer in app.question:
+        for qestion in questionFilter:
+            if (answer["idQestion"] == qestion.id) and (qestion.id != '000000000000000000000000'):
+                dataQestionAndAnswer.append(Answer(qestion=qestion.question, answer=answer["answer"]))
+    
+    is_relevant, is_positive, objectt = 0, 0, 2 #toAI(dataBaseQestion) Фкунция нейронка
+    
+    DB.AddFeedback(idLection=app.idLection, dataAnswer=dataQestionAndAnswer, is_relevant=is_relevant, is_positive=is_positive, object=objectt, time=datetime.now())
