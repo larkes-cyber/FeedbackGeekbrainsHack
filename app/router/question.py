@@ -11,7 +11,6 @@ router = APIRouter()
 
 @router.post("/fetchQestion", response_model=ResponseFetchQestion)
 async def fetchQestion(app: RequestFetchQestion):
-    print(ResponseFetchQestion(question=DB.GetQestion(idLection=app.idLection)))
     return ResponseFetchQestion(question=DB.GetQestion(idLection=app.idLection))
 
 
