@@ -34,16 +34,16 @@ const TutorPage = () => {
     const [showLectionDialog, setShowingLectionDialog] = useState(false);
 
     useEffect(() => {
-        lectionRepository.fetchAllLectionsCourses().then((res) => {
-            setCourses(res);
-        });
+        refreshLections();
+        refreshQuestions();
     }
     ,[]);
 
     useEffect(() => {
         if(selectedLection != null){
-            refreshLections()
-            refreshQuestions();
+            lectionRepository.fetchLectionMain(selectedLection).then(res => {
+                setSelectedLectionMain(res);
+            })
         }
     }, [selectedLection]);
 
@@ -53,9 +53,9 @@ const TutorPage = () => {
         })
     }
     const refreshLections = () => {
-        lectionRepository.fetchLectionMain(selectedLection).then(res => {
-            setSelectedLectionMain(res);
-        })
+        lectionRepository.fetchAllLectionsCourses().then((res) => {
+            setCourses(res);
+        });
     }
   
     const handleChange = (event, newValue) => {
@@ -177,7 +177,7 @@ const TutorPage = () => {
                                   {questions != null ? <QuestionView
                                    questions={questions}
                                    addQuestionCallback={(question) => {
-                                     
+        
                                      refreshQuestions();
                                    }}
                                     /> : null} 

@@ -26,8 +26,8 @@ class LectionRepository{
         return await this._lectionsDataSource.fetchLectionMain(idLection);
     }
 
-    async fetchQuestions(){
-        return this._questionDataSource.fetchQuestions("12345");
+    async fetchQuestions(idLection){
+        return this._questionDataSource.fetchQuestions(idLection);
     }
 
     async addQuestion(question){

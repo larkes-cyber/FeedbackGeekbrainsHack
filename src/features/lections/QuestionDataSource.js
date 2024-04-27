@@ -16,7 +16,7 @@ class QuestionDataSource{
         else throw new Error("some web error")
     }
 
-    async fetchQuestions(){
+    async fetchQuestions(lectionId){
         // const data = await fetch(`${this._api}/fetchTokenQuestion`, {
         //     method: 'PUT',
         //     headers: {
@@ -31,8 +31,8 @@ class QuestionDataSource{
         // else throw new Error("some web error")
         return [
             {id:"1234", question:"Очень важный вопрос"},
-            {id:"123", question:"Очень важный вопрос"},
-            {id:"12345", question:"Очень важный вопрос"},
+            {id:"123", question:"Очень важный "},
+            {id:"12345", question:"Очень  "},
             {id:"12347", question:"Очень важный вопрос"},
             {id:"12349", question:"Очень важный вопрос"}
         ]
