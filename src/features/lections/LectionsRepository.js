@@ -12,11 +12,14 @@ class LectionRepository{
     async fetchAllLectionsCourses(){
         const output = []
         const courses = await this._lectionsDataSource.fetchCourses();
-        await courses.forEach(course => {
-            this._lectionsDataSource.fetchLections(course.courseId).then(res => {
-                output.push({
-                    course:course,
-                    lections:res
+        const parsed = await courses.json();
+        await parsed.course.forEach(course => {
+            this._lectionsDataSource.fetchLections(course.id).then(res => {
+                res.json().then((res) => {
+                    output.push({
+                        course:course,
+                        lections:res.lection
+                    })
                 })
             })
         });
@@ -39,6 +42,10 @@ class LectionRepository{
         this._questionDataSource.deleteQuestion(idQuestion);
     }
     async addAnswer(){
+    }
+
+    async addCourse(title){
+        return this._lectionsDataSource.addCourse({title:title});
     }
 }
 

@@ -70,8 +70,9 @@ const TutorPage = () => {
                 callbackClose={() =>{
                     setShowingCourseDialog(false);
                 }} 
-                callbackDone={()=>{
+                callbackDone={(title)=>{
                     setShowingCourseDialog(false);
+                    lectionRepository.addCourse(title).then(res => console)
                 }}
                 /> : null}
             {showLectionDialog ? <AddLectionDialog 

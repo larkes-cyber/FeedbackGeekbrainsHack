@@ -1,66 +1,40 @@
 
 class LectionsDataSource{
 
-    _api = "http://lolka.com";
+    _api = "https://4851-185-6-247-97.ngrok-free.app/";
 
     async fetchCourses(){
-        // const data = await fetch(`${this._api}/fetchCourses`, {
-        //     method: 'GET',
-        //     headers: {
-        //       'Content-Type': 'application/json;charset=utf-8'
-        //     }
-        // })
-        // if(data.ok) return data.body
-        // else throw new Error("some web error")
-        return [{
-            id:"1234",
-            name:"Котлин про с нуля"
-        },{
-            id:"1234",
-            name:"Котлин про с нуля"
-        },{
-            id:"1234",
-            name:"Котлин про с нуля"
-        },{
-            id:"1234",
-            name:"Котлин про с нуля"
-        }]
+        try{
+            const data = await fetch(`${this._api}fetchCourse`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json;charset=utf-8',
+                  'Accept': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  "ngrok-skip-browser-warning": "1"
+                }
+            });
+            return await data;
+        }catch(e){
+            console.log(e);
+        }
     }
 
     async fetchLections(courseId){
-        // const data = await fetch(`${this._api}/fetchLections`, {
-        //     method: 'POST',
-        //     headers: {
-        //       'Content-Type': 'application/json;charset=utf-8'
-        //     },
-        //     body:JSON.stringify({
-        //         idCourse:courseId
-        //     })
-        // })
-        // if(data.ok) return await data.body
-        // else throw await new Error("some web error")
-        return [
-            {
-                name:"Основы программирования",
-                id:"3432",
-                description:"Прото́н — одна из трёх элементарных частиц, из которых построено обычное вещество. Протоны входят в состав атомных ядер; "
+        const data = await fetch(`${this._api}fetchLectionByIdCourse`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                "ngrok-skip-browser-warning": "1"
             },
-            {
-                name:"Основы программирования",
-                id:"34321",
-                description:"Прото́н — одна из трёх элементарных частиц, из которых построено обычное вещество. Протоны входят в состав атомных ядер; "
-            },
-            {
-                name:"Основы программирования",
-                id:"343",
-                description:"Прото́н — одна из трёх элементарных частиц, из которых построено обычное вещество. Протоны входят в состав атомных ядер; "
-            },
-            {
-                name:"Основы программирования",
-                id:"3432343",
-                description:"Прото́н — одна из трёх элементарных частиц, из которых построено обычное вещество. Протоны входят в состав атомных ядер; "
-            }
-        ]
+            body:JSON.stringify({
+                idCourse:courseId
+            })
+        })
+        if(data.ok) return await data;
+        else throw await new Error("some web error")
     }
 
 
@@ -87,6 +61,35 @@ class LectionsDataSource{
             answCount:15
         }
     }    
+
+    async addCourse(request){
+        await fetch(`${this._api}/add`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+            body:JSON.stringify({
+                
+            })
+        })
+    }
+
+    async addCourse(request){
+        try{
+            await fetch(`${this._api}addCourse`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body:JSON.stringify({
+                    title:request.title
+                })
+            })
+        }catch(e){
+            console.log(e);
+        }
+        
+    }
 
 }
 

@@ -21,8 +21,10 @@ const LectionsList = (props) => {
 
 
 
+
     useEffect(() => {
         let newItems = [];
+        console.log(props.items);
         props.items.forEach(element => {
             newItems.push(
                 <ExpendLection course={element.course} lections={element.lections} lectionCallback={(id) => props.lectionCallback(id)} selectedLection={props.selectedLection} />
@@ -59,7 +61,7 @@ const ExpendLection = (props) => {
                 <ListItemButton onClick={handleClick} sx={{ padding:1}} >
                     <ListItemText
                         primary = {
-                            props.course.name
+                            props.course.title
                         }
                     />
                     {open ? <ExpandLess /> : <ExpandMore />}
@@ -81,7 +83,7 @@ const ExpendLection = (props) => {
                                 }} sx={{ padding:1}} >
                                     <ListItemText
                                         primary = {
-                                        item.name
+                                        item.title
                                         }
                                         secondary = {
                                             item.description
