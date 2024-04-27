@@ -26,11 +26,16 @@ class LectionRepository{
 
     async fetchLectionMain(idLection){
         const data = await this._lectionsDataSource.fetchLectionMain(idLection);
-        const parsedData = await data.json();
+        const parsedData = await data.json()
         const setupData = await {
             id:idLection,
-            name:parsedData.title,
-           // tutor:
+            name:parsedData.info.title,
+            tutor:parsedData.info.tutor,
+            description:parsedData.info.discription,
+            tutorRec:parsedData.recommendation.tutor,
+            mentorRec:parsedData.recommendation.mentor,
+            orgRec:parsedData.recommendation.org,
+            answCount:parsedData.info.counterAnswer
         }
         return await setupData;
     }

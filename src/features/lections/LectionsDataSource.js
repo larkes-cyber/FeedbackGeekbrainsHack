@@ -56,7 +56,7 @@ class LectionsDataSource{
 
     async fetchLectionMain(idLection){
         try{
-            const data = await fetch(`${this._api}/fetchLectionInfo`, {
+            const data = await fetch(`${this._api}fetchLectionInfo`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json;charset=utf-8'
@@ -65,7 +65,7 @@ class LectionsDataSource{
                     idLection:idLection
                 })
             })
-            if(data.ok) return await data.body
+            if(data.ok) return await data
             else throw await new Error("some web error")
         }catch(e){
 

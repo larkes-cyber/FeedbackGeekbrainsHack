@@ -41,6 +41,7 @@ const TutorPage = () => {
 
     useEffect(() => {
         if(selectedLection != null){
+            console.log(selectedLection);
             lectionRepository.fetchLectionMain(selectedLection).then(res => {
                 setSelectedLectionMain(res);
             })
