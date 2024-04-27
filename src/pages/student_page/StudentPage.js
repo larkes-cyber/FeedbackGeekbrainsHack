@@ -41,7 +41,7 @@ const StudentPage = () => {
 
     useEffect(() => {
         if(selectedLection != null){
-            lectionRepository.fetchQuestions("").then(res => {
+            lectionRepository.fetchQuestions(selectedLection).then(res => {
                 setQuestions(res);
                 setDynamicQuestions(res);
             })

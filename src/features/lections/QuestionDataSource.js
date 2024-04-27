@@ -6,7 +6,10 @@ class QuestionDataSource{
         const data = await fetch(`${this._api}/fetchTokenQuestion`, {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json;charset=utf-8'
+              'Content-Type': 'application/json;charset=utf-8',
+              'Accept': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              "ngrok-skip-browser-warning": "1"
             },
             body: JSON.stringify({
                 idLection:idLection
@@ -21,7 +24,10 @@ class QuestionDataSource{
             const data = await fetch(`${this._api}fetchQestion`, {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json;charset=utf-8'
+                    'Content-Type': 'application/json;charset=utf-8',
+                    'Accept': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    "ngrok-skip-browser-warning": "1"
                 },
                 body:
                 JSON.stringify({
@@ -39,7 +45,10 @@ class QuestionDataSource{
         const data = await fetch(`${this._api}addQestion`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json;charset=utf-8'
+                'Content-Type': 'application/json;charset=utf-8',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                "ngrok-skip-browser-warning": "1"
             },
             body:
             JSON.stringify({
@@ -56,7 +65,10 @@ class QuestionDataSource{
         const data = await fetch(`${this._api}deleteQestion`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json;charset=utf-8'
+                'Content-Type': 'application/json;charset=utf-8',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                "ngrok-skip-browser-warning": "1"
             },
             body:
             JSON.stringify({
