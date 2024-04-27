@@ -13,6 +13,9 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DoneIcon from '@mui/icons-material/Done';
 import TextField from '@mui/material/TextField';
+import { IconButton } from '@mui/material';
+import { fa } from 'faker/lib/locales';
+
 
 
 
@@ -20,30 +23,48 @@ import TextField from '@mui/material/TextField';
 const QuestionView = (props) => {
 
     const [questions, setQuestions] = useState(null);
+    const [showQuestionForm, setShowQuestionForm] = useState(false);
 
     useEffect(() => {
         const newArr = [];
         props.questions.forEach(element => {
             newArr.push(<Card
                 elevation={2}
-                sx={{mb:1, ml:1, mr:5, mt:1, width:"95%", p:1, pl:2, display: 'inline-flex'}}
+                sx={{mb:1, ml:1, mr:5, mt:1, width:"95%", p:1, pl:2, display: 'flex', flexDirection:"row", verticalAlign:"center", alignItems:"center"}}
                 >
                 <ListItemText
                     primary = {
                      element.question
                     }
                 />
-                <BorderColorIcon sx={{mr:1, mt:0.5}}/>
-                <ClearIcon sx={{mr:1, mt:0.5}}/>
+                <IconButton  sx={{mr:1}}>
+                  <BorderColorIcon/>
+                </IconButton>
+                <IconButton  sx={{mr:1}}>
+                   <ClearIcon/>
+                </IconButton>
             </Card>);
         });
         setQuestions(newArr);
     }, []);
 
     return(
-        <List sx={{bgcolor: 'background.paper', width:'100%', maxHeight:"100vh", padding:0 }}> 
+        <List 
+            sx={{bgcolor: 'background.paper', width:'100%', maxHeight:"100vh", padding:0 }}
+
+        > 
             {questions}
-            <NewQuestionForm/>
+            {showQuestionForm ? <NewQuestionForm 
+            closeCallback={
+                () => {
+                    setShowQuestionForm(false);
+                }}
+            doneCallback={
+                () => {
+                    setShowQuestionForm(false);
+                }
+            }
+            /> : null}
             <Button
                 component="label"
                 sx={{width:"100%", height:"40px", mt:"40px"}}
@@ -52,6 +73,9 @@ const QuestionView = (props) => {
                 color='secondary'
                 tabIndex={-1}
                 endIcon={<AddIcon/>}
+                onClick={() => {
+                    setShowQuestionForm(true);
+                }}
                 >
                   Добавить новый вопрос
             </Button>
@@ -66,16 +90,25 @@ const NewQuestionForm = (props) => {
    return( 
         <Card
             elevation={2}
-            sx={{mb:1, ml:1, mr:5, mt:1, width:"96%", pb:1, pl:2, display: 'inline-flex', alignItems:"center", justifyContent:"space-between"}}
+            sx={{mb:1, ml:1, mr:5, mt:1, width:"98%", display:"flex", flexDirection:"row"}}
             >
-      <TextField 
-      id="standard-basic"
-       label="Введите ваш вопрос" 
-       sx={{width:"90%"}} 
-       variant="standard" 
-       color='secondary'
-       />
-            <DoneIcon sx={{mr:2, mt:0.5}}/>
+            <TextField 
+                id="standard-basic"
+                label="Введите ваш вопрос" 
+                sx={{width:"90%", mb:1, ml:1, mt:1}} 
+                variant="standard" 
+                color='secondary'
+                />
+            <IconButton onClick={() => {
+                props.doneCallback();
+            }}>
+                <DoneIcon />
+            </IconButton>
+            <IconButton onClick={() => {
+                props.closeCallback();
+            }}>
+               <ClearIcon />
+            </IconButton>
         </Card>
     )
 }
