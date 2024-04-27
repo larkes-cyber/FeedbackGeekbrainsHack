@@ -93,6 +93,7 @@ const TutorPage = () => {
                             id="outlined-size-small"
                             placeholder='Поиск...'
                             size="small"
+                            color='secondary'
                             sx={{mt:"20px", mb:"15px", width:"95%", ml:"2%"}}
                             onChange={(e) => {
                                 console.log(e.target.value)

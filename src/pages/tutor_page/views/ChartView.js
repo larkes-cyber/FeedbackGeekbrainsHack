@@ -69,7 +69,7 @@ const ChartView = () => {
   }
 
     return(
-      <div style={{paddingTop:"3%"}}>
+      <div style={{paddingTop:"3%", width:"97%"}}>
         <div style={{display:"inline-flex", justifyContent:"space-between", width:"100%"}}>
            <ChartWrapper title={"Положительные/Отрицательные отзывы"}>
             <Pie 
@@ -77,7 +77,7 @@ const ChartView = () => {
                 options={donatOptions}
                 />
            </ChartWrapper>
-           <ChartWrapper title={" Релевантен/Не релевантен"}>
+           <ChartWrapper title={"Релевантен/Нерелевантные"}>
             <Pie 
                 data={pieData} 
                 options={donatOptions}
@@ -108,7 +108,7 @@ const ChartWrapper = (props) => {
       <Typography
               sx={{ display: 'inline',fontWeight: 'bold'}}
               component="span"
-              variant="h6"
+              variant="h7"
               color="text.primary"
             >
             {props.title}
