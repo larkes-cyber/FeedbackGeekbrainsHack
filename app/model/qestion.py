@@ -41,6 +41,21 @@ class RequestAddLectionQestionByIdx(BaseModel):
     idLection: str
     title: str
 
+class RequestEditLection(BaseModel):
+    idLection: str 
+    title: str
+    description: str
+    tutor: str
+
+class RequestDeleteLection(BaseModel):
+    idLection: str 
+
+class RequestAddLection(BaseModel):
+    title: str
+    description: str
+    tutor: str
+    idCourse: str
+
 # Response, ответы исходящие с серавка 
 class ResponseFetchQestionByIdxLection(BaseModel):
     qestion: List[Qestion]
@@ -68,6 +83,15 @@ class ResponseDeleteLectionQestionByIdx(BaseModel):
 class ResponseAddLectionQestionByIdx(BaseModel):
     status: bool
 
+
+class ResponseEditLection(BaseModel):
+   status: bool
+
+class ResponseDeleteLection(BaseModel):
+    status: bool 
+
+class ResponseAddLection(BaseModel):
+    status: bool
 
 # FetchQestionByidx
 # EditLectionQestionByIdx

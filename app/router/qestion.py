@@ -7,6 +7,9 @@ from app.model.qestion import ResponseFetchQestionByIdxLection, ResponseAnswerQe
 from app.model.qestion import RequestEditLectionQestionByIdx, RequestAddLectionQestionByIdx, RequestDeleteLectionQestionByIdx
 from app.model.qestion import ResponseEditLectionQestionByIdx, ResponseAddLectionQestionByIdx, ResponseDeleteLectionQestionByIdx
 
+from app.model.qestion import RequestEditLection, RequestDeleteLection, RequestAddLection
+from app.model.qestion import ResponseEditLection, ResponseDeleteLection, ResponseAddLection
+
 router = APIRouter()
 
 
@@ -49,3 +52,21 @@ async def deleteLectionQestionByIdx(app: RequestDeleteLectionQestionByIdx):
     DB.DeleteLectionQestionByIdx(app.idQesion)
 
     return ResponseDeleteLectionQestionByIdx(status=True)
+
+@router.put("/addLection", response_model=ResponseAddLection)
+async def addLection(app: RequestAddLection):
+    DB.AddLection(app.title, app.description, app.tutor, app.idCourse)
+
+    return ResponseAddLection(status=True)
+
+@router.put("/editLection", response_model=ResponseEditLection)
+async def editLection(app: RequestEditLection):
+    DB.EditLection(app.title, app.description, app.tutor, app.idLection)
+
+    return ResponseEditLection(status=True)
+
+@router.put("/deleteLection", response_model=ResponseDeleteLection)
+async def deleteLection(app: RequestDeleteLection):
+    DB.DeleteLection(app.idLection)
+
+    return ResponseDeleteLection(status=True)

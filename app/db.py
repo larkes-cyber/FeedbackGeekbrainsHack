@@ -65,6 +65,7 @@ sampleCollectionQestion = {"id": -1,
                            "title": "creater"
                            }
 
+filterQestion = "На шкале от 1 до 10, насколько вы готовы поделиться вашим мнением о вебинаре?"
 class UseDB():
     def __init__(self, session):
         self.session = session
@@ -99,6 +100,16 @@ class UseDB():
         
         client.close()
         return data 
+    
+    def FetchCourseByIdx(self, idCourse):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionCourse = dbTable["course"]
+        element = collectionCourse.find_one({"_id": ObjectId(idCourse)})
+
+        response = CollectionCourse(id=ObjectId(idCourse), title=element["title"])
+
+        return response
     
         
     def FetchLectionByIdx(self, idx: str):
@@ -175,6 +186,66 @@ class UseDB():
 
         client.close()
         return newElement.inserted_id
+    
+    def CreateBaseQestion(self):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionQestion = dbTable["qestion"]
+
+        q1 = collectionQestion.insert_one({"title": "Что вам больше всего понравилось в теме вебинара и почему?"})
+        q2 = collectionQestion.insert_one({"title": "Были ли моменты в вебинаре, которые вызвали затруднения в понимании материала? Можете описать их?"}) 
+        q3 = collectionQestion.insert_one({"title": "Какие аспекты вебинара, по вашему мнению, нуждаются в улучшении и какие конкретные изменения вы бы предложили?"})
+        q4 = collectionQestion.insert_one({"title": "Есть ли темы или вопросы, которые вы бы хотели изучить более подробно в следующих занятиях?"}) 
+        return [q1.inserted_id, q2.inserted_id, q3.inserted_id, q4.inserted_id]
+    
+    def CreateStatistic(self):
+        return 0 # index
+    
+    def AddLection(self, title, description, tutor, idCourse):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionLection = dbTable["lection"]
+
+        course = self.FetchCourseByIdx(idCourse)
+        idxQestion = self.CreateBaseQestion()
+        idStatistic = self.CreateStatistic()
+
+        dict = { "title": title,
+                "description": description,
+                "tutor": tutor,
+                "countAnswer": 0,
+                "idCourse": course.id,
+                "titleCourse": course.title,
+                "idQuestion": idxQestion,
+                "idStatistic": idStatistic
+                }
+
+        newElement = collectionLection.insert_one(dict)
+
+        return newElement.inserted_id
+
+    def EditLection(self, title, description, tutor, idLection):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionLection = dbTable["lection"]
+
+        if title != "[-1]":
+            collectionLection.update_one({"_id": ObjectId(idLection)}, {"title": title})
+        if description != "[-1]":
+            collectionLection.update_one({"_id": ObjectId(idLection)}, {"description": description})
+        if tutor != "[-1]":
+            collectionLection.update_one({"_id": ObjectId(tutor)}, {"title": tutor})
+        
+        client.close()
+        return True
+
+    def DeleteLection(self, idLection):
+        client = pymongo.MongoClient(self.session)
+        dbTable = client["feedback"]
+        collectionLection = dbTable["lection"]
+
+        collectionLection.delete_one({"_id": ObjectId(idLection)})
+        return True
 
 
     
