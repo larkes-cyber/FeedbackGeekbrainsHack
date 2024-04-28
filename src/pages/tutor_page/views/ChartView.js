@@ -125,11 +125,11 @@ const ChartView = (props) => {
   },[props]);
 
     const data = [
-      { text: 'Hey', value: 1000 },
-      { text: 'lol', value: 200 },
-      { text: 'first impression', value: 800 },
-      { text: 'very cool', value: 1000000 },
-      { text: 'duck', value: 10 },
+      { text: 'Кодить', value: 1000 },
+      { text: 'Обучаться', value: 200 },
+      { text: 'Гуглить', value: 800 },
+      { text: 'Спрашивать', value: 1000000 },
+      { text: 'Игнорировать', value: 10 },
     ];
 
 
@@ -176,6 +176,15 @@ const ChartView = (props) => {
           </Typography>
           {activeData != null ? <Bar options={barOptions} data={activeData} /> : null}
         </div>
+        <Typography
+                sx={{ display: 'inline',fontWeight: 'bold', mt:"3%"}}
+                component="span"
+                variant="h6"
+                color="text.primary"
+                textAlign="center"
+              >
+              Облако слов
+          </Typography>
         <WordCloud
           data={data}
           width={500}
