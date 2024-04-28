@@ -22,13 +22,13 @@ async def answerQestion(app: RequestAnswerQestion):
     lection = DB.GetLection(idLection=app.idLection)
 
     dataQestionAndAnswer = list()
-    dataQestionAndAnswer.append(Answer(qestion="О каком вебинаре Вы хотите рассказать?", answer=lection.title))
+    dataQestionAndAnswer.append(Answer(question="О каком вебинаре Вы хотите рассказать?", answer=lection.title))
 
     for answer in app.question:
         for qestion in questionFilter:
-            if (answer["idQestion"] == qestion.id) and (qestion.id != '000000000000000000000000'):
-                dataQestionAndAnswer.append(Answer(qestion=qestion.question, answer=answer["answer"]))
+            if (answer.idQestion == qestion.id) and (qestion.id != '000000000000000000000000'):
+                dataQestionAndAnswer.append(Answer(question=qestion.question, answer=answer.answer))
+    is_relevant, is_positive, objectt = 0, 1, 2 #toAI(dataBaseQestion) Фкунция нейронка
     
-    is_relevant, is_positive, objectt = 0, 0, 2 #toAI(dataBaseQestion) Фкунция нейронка
-    
+    # Добавить пункт основной проблемы вебинара, препода, программы
     DB.AddFeedback(idLection=app.idLection, dataAnswer=dataQestionAndAnswer, is_relevant=is_relevant, is_positive=is_positive, object=objectt, time=datetime.now())

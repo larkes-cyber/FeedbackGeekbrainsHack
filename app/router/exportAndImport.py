@@ -16,6 +16,7 @@ def download_file(app: DownloadLectionStatistiic):
     df = pd.DataFrame(columns=[ "time", "course", "lection", "answer_1", "answer_2", "answer_3", "answer_4", "answer_5", "is_relevant" , "is_positive ", "object"])
 
     for statistic in lection.feedback:
+
         objectName = ""
         if statistic.object == 0:
             objectName = "вебинар"
@@ -24,6 +25,8 @@ def download_file(app: DownloadLectionStatistiic):
         elif statistic.object == 2:
             objectName = "препод"
         
+        # tutor, mentor, org = DB.GetRecomendation(app.idLection)
+
         df.loc[len(df.index)] = [(statistic.time).strftime('%Y-%m-%d %H:%M:%S'), lection.titleCourse, lection.title, ((statistic.answer)[0]).answer, ((statistic.answer)[1]).answer, ((statistic.answer)[2]).answer, ((statistic.answer)[3]).answer, ((statistic.answer)[4]).answer, statistic.is_relevant, statistic.is_positive, objectName]
     df.to_excel("app/file/output.xlsx")  
     return FileResponse(path='app/file/output.xlsx', filename='Статистика.xlsx', media_type='multipart/form-data')
@@ -60,6 +63,7 @@ async def upload_file(file: UploadFile = File(...)):
             time = datetime.now()
         
         is_relevant, is_positive, objectt = 0, 0, 2 #toAI(dataBaseQestion) Фкунция нейронка
+        # Добавить пункт основной проблемы вебинара, препода, программы
         
         DB.AddFeedback(idLection=idxLection, dataAnswer=dataBaseQestion, is_relevant=is_relevant, is_positive=is_positive, object=objectt, time=time)
 

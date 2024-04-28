@@ -48,7 +48,7 @@ sampleCollectionLection = {"title": "sample",
                            "idCourse": -1,
                            "titleCourse": "creater",
                            "question": [{"idQuestion": ObjectId(), "question": "some"}], 
-                           "feedback": [{"idFeedbak": ObjectId(), "answer": [{"question": "some", "answer": "some"}], "is_relevant": 0, "is_positive": 2, "object": 3, "time": datetime.time}]
+                           "feedback": [{"idFeedbak": ObjectId(), "answer": [{"question": "some", "answer": "some"}], "is_relevant": 0, "is_positive": 1, "object": 2, "time": datetime.time}]
                            }
 
 filterQestion = "На шкале от 1 до 10, насколько вы готовы поделиться вашим мнением о вебинаре?" # 000000000000000000000000
@@ -131,12 +131,14 @@ class UseDB():
         client = pymongo.MongoClient(self.session)
         collection = client.feedback.lection
 
-        lection = collection.find_one({"_id": ObjectId(idLection), "feedback": {"idFeedbak": ObjectId(idFeedback)}})
+        lection = collection.find_one({"_id": ObjectId(idLection)})
 
         dataAnswer = list()
-        for answer in lection["feedback"]["answer"]:
-            dataAnswer.append(Answer(question=answer["question"], answer=answer["answer"]))
-        
+        for feedback in lection["feedback"]:
+            if str(feedback["idFeedbak"]) == idFeedback:
+                for answer in feedback["answer"]:
+                    dataAnswer.append(Answer(question=answer["question"], answer=answer["answer"]))
+                    
         client.close()
         return dataAnswer
 
@@ -148,13 +150,32 @@ class UseDB():
         lection = collection.find_one({"_id": ObjectId(idLection)})
 
         dataFeedback = list()
-        for feedback in lection["feedback"]: 
-            dataFeedback.append(Feedback(id=str(feedback["idFeedbak"]), answer=self.GetAnswer(idLection),
+        for feedback in lection["feedback"]:
+            dataFeedback.append(Feedback(id=str(feedback["idFeedbak"]), answer=self.GetAnswer(idLection, str(feedback["idFeedbak"])),
                                          is_relevant=feedback["is_relevant"], is_positive=feedback["is_positive"], object=feedback["object"],
                                          time=feedback["time"]))
         
         client.close()
         return dataFeedback
+    
+    def GetRecomendation(self, idLection):
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
+        
+        negativTutor, negativMentor, negativOrg = "", "", ""
+        for feedback in collection.find({"_id": ObjectId(idLection)})["feedback"]:
+            if feedback["object"] == 0:
+                for answer in feedback["object"]["answer"]:
+                    negativTutor += answer["answer"]
+            elif feedback["object"] == 1:
+                for answer in feedback["object"]["answer"]:
+                    negativMentor += answer["answer"]
+            elif feedback["object"] == 2:
+                for answer in feedback["object"]["answer"]:
+                    negativOrg += answer["answer"]
+        
+        return "test", "test", "test"
+
     
     def AddFeedback(self, idLection, dataAnswer:List[Answer], is_relevant, is_positive, object, time):
         client = pymongo.MongoClient(self.session)
@@ -164,10 +185,17 @@ class UseDB():
         for answer in dataAnswer:
             newDataAnswer.append({"question": answer.question, "answer": answer.answer})
 
-        collection.update_one({"_id": ObjectId(idLection)}, 
-                              {"$push", {"feedback": 
-                                         {"idFeedbak": ObjectId(), "answer": newDataAnswer, "is_relevant": is_relevant,
-                                          "is_positive": is_positive, "object": object, "time": time}}})
+        
+        lection = collection.find_one({"_id": ObjectId(idLection)})
+
+        newFeedback = list()
+        for feedback in lection["feedback"]:
+            newFeedback.append(feedback)
+        newFeedback.append({"idFeedbak": ObjectId(), "answer": newDataAnswer, "is_relevant": is_relevant,
+                                          "is_positive": is_positive, "object": object, "time": time})
+        
+        collection.update_one({"_id": ObjectId(idLection)}, {"$set": {"feedback": newFeedback}})
+        
         client.close()
     
     def GetLection(self, idLection) -> Lection:

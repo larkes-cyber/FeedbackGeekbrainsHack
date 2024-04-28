@@ -42,7 +42,9 @@ async def fetchLectionMain(app: RequestFilterIdLection):
     lection = DB.GetLection(app.idLection)
     info = LectionInfo(title=lection.title, tutor=lection.tutor, discription=lection.description, counterAnswer=lection.countAnswer)
 
-    recommendation = LectionRecommendation(tutor="test", mentor="test", org="org") # нейронка по статистике, среднее. Из статистики
+    tutor, mentor, org = DB.GetRecomendation(app.idLection)
+
+    recommendation = LectionRecommendation(tutor=tutor, mentor=mentor, org=org) # нейронка по статистике, среднее. Из статистики
 
     return ResponseFetchLectionInfo(info=info, recommendation=recommendation)
 
