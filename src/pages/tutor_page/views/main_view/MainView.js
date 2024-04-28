@@ -20,6 +20,8 @@ const MainView = (props) => {
         width: 1,
       });
 
+      console.log(props.lection)
+
     return(
         <div className='main_view'>
              <Typography
@@ -56,17 +58,19 @@ const MainView = (props) => {
             {props.lection.mentorRec != null && (localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации ментору: "} content={props.lection.mentorRec} /> : null }
             {props.lection.orgRec != null && (localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации орг: "} content={props.lection.orgRec} /> : null }
 
-            <Button
-                component="label"
-                sx={{width:"26%", height:"56px", mt:"50px"}}
-                role={undefined}
-                variant="contained"
-                color='secondary'
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-                >
-                  Скачать EXCEL
-            </Button>
+            <a href={`https://22be-185-6-247-97.ngrok-free.app/exportExel/${props.lection.id}`} style={{textDecoration:"none"}} target="_blank" download>
+                <Button
+                    component="label"
+                    sx={{width:"26%", height:"56px", mt:"50px"}}
+                    role={undefined}
+                    variant="contained"
+                    color='secondary'
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                    >
+                    Скачать EXCEL
+                </Button>
+            </a>
 
         </div>
     )
