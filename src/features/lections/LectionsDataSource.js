@@ -142,6 +142,28 @@ class LectionsDataSource{
         }
     }
 
+    async fetchStatistics(idLection){
+        console.log(idLection);
+        try{
+            const data = await fetch(`${this._api}fetchStatistic`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json;charset=utf-8',
+                  'Accept': 'application/json',
+                  'Access-Control-Allow-Origin': '*',
+                  "ngrok-skip-browser-warning": "1"
+                },
+                body:JSON.stringify({
+                    idLection:idLection
+                })
+            })
+            if(data.ok) return await data
+            else throw await new Error("some web error")
+        }catch(e){
+            console.log(e);
+        }
+    }
+
 }
 
 export default LectionsDataSource;

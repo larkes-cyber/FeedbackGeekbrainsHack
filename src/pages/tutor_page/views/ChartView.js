@@ -5,29 +5,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, BarElemen
 import { Pie } from 'react-chartjs-2';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
+import { useState, useEffect } from 'react';
+import LectionRepository from '../../../features/lections/LectionsRepository';
+
 
 
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, BarElement, LinearScale);
 
-const pieData = {
-  labels: ['Положительные', 'Отрицательные'],
-  datasets: [
-    {
-      label: '# of Votes',
-      data: [12, 19],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)'
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)'
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
 
 
 export const barOptions = {
@@ -41,47 +26,107 @@ export const barOptions = {
 
 const barLabels = ['вебинар','программа','преподаватель'];
 
-
-const barData = {
-  labels:barLabels,
-  datasets: [
-    {
-      label: 'Стата',
-      data: [12, 45, 23],
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    }
-  ],
-};
+const donatOptions = {
+  maintainAspectRatio: false,
+  aspectRatio: 1,
+  plugins: {
+    legend: {
+      display: true,
+      position: "bottom"
+    },
+  }
+}
 
 console.log(faker.datatype.number({ min: 0, max: 1000 }));
 
-const ChartView = () => {
+const ChartView = (props) => {
 
-  const donatOptions = {
-    maintainAspectRatio: false,
-    aspectRatio: 1,
-    plugins: {
-      legend: {
-        display: true,
-        position: "bottom"
-      },
+  const lectionRepository = new LectionRepository();
+
+  const [reviewData, setReviewData] = useState(null);
+  const [infoData, setInfoData] = useState(null);
+  const [roleData, setRoleData] = useState(null);
+
+
+  useEffect(()=>{
+    if(props.id != null){
+      lectionRepository.fetchLectionStatistic(props.id).then(res => {
+        setReviewData(
+          {
+            labels: ['Положительные', 'Отрицательные'],
+            datasets: [
+              {
+                label: '# of Votes',
+                data: [res.goodRevue, res.badRevue],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1,
+              },
+            ],
+          }
+        )
+        setInfoData(
+          {
+            labels: ['Информативно', 'Не информативно'],
+            datasets: [
+              {
+                label: '# of Votes',
+                data: [res.goodInformative, res.badInformative],
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1,
+              },
+            ],
+          }
+        );
+        setRoleData(
+          {
+          labels:barLabels,
+          datasets: [
+            {
+              label: 'Стата',
+              data: [res.tutor, res.mentor, res.org],
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            }
+          ],
+        }
+        )
+      });
     }
-  }
+  },[props]);
+
 
     return(
       <div style={{paddingTop:"3%", width:"97%"}}>
         <div style={{display:"inline-flex", justifyContent:"space-between", width:"100%"}}>
            <ChartWrapper title={"Положительные/Отрицательные отзывы"}>
-            <Pie 
-                data={pieData} 
+            {reviewData != null ? 
+             <Pie 
+                data={reviewData} 
                 options={donatOptions}
-                />
+                /> : null
+              }
+           
            </ChartWrapper>
            <ChartWrapper title={"Релевантен/Нерелевантные"}>
-            <Pie 
-                data={pieData} 
+            {infoData != null ?
+              <Pie 
+                data={infoData} 
                 options={donatOptions}
-                />
+                /> : null
+            }
            </ChartWrapper>
         </div>
         <div style={{width:"100%", alignItems:"center", alignContent:"center", display:"flex", flexDirection:"column", marginTop:"4%"}}>
@@ -94,7 +139,7 @@ const ChartView = () => {
               >
               К кому направлен (вебинар, программа, преподаватель)
           </Typography>
-         <Bar options={barOptions} data={barData} />
+          {roleData != null ? <Bar options={barOptions} data={roleData} /> : null}
         </div>
       </div>
     )

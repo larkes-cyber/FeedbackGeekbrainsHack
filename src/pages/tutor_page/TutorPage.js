@@ -202,7 +202,7 @@ const TutorPage = () => {
                                 <CustomTabPanel value={tabs} index={1}>
                                     <div className='tutor_page__tabs__chart'>
                                         {
-                                            selectedLectionMain != null ? <ChartView/> : null
+                                            selectedLectionMain != null ? <ChartView id={selectedLection} /> : null
                                         }
                                     </div>
                                 </CustomTabPanel>

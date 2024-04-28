@@ -1,3 +1,4 @@
+import id from 'faker/lib/locales/id_ID';
 import LectionsDataSource from './LectionsDataSource';
 import QuestionDataSource from './QuestionDataSource';
 
@@ -73,6 +74,11 @@ class LectionRepository{
 
     async fetchFiltredLections(text){
         return await this._lectionsDataSource.fetchFiltredLections(text);
+    }
+
+    async fetchLectionStatistic(idLection){
+        const data = await this._lectionsDataSource.fetchStatistics(idLection);
+        return await data.json();
     }
 }
 
