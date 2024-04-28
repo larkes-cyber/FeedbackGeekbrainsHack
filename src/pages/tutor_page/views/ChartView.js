@@ -7,6 +7,9 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import { useState, useEffect } from 'react';
 import LectionRepository from '../../../features/lections/LectionsRepository';
+import { render } from 'react-dom';
+import WordCloud from 'react-d3-cloud';
+
 
 
 
@@ -107,6 +110,14 @@ const ChartView = (props) => {
     }
   },[props]);
 
+    const data = [
+      { text: 'Hey', value: 1000 },
+      { text: 'lol', value: 200 },
+      { text: 'first impression', value: 800 },
+      { text: 'very cool', value: 1000000 },
+      { text: 'duck', value: 10 },
+    ];
+
 
     return(
       <div style={{paddingTop:"3%", width:"97%"}}>
@@ -141,6 +152,7 @@ const ChartView = (props) => {
           </Typography>
           {roleData != null ? <Bar options={barOptions} data={roleData} /> : null}
         </div>
+        <WordCloud data={data} />
       </div>
     )
 
