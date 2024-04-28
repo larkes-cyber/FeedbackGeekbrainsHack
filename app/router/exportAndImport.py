@@ -10,9 +10,9 @@ from app.model.exportAndImport import DownloadLectionStatistiic
 
 router = APIRouter()
 
-@router.post("/exportExel")
-def download_file(app: DownloadLectionStatistiic):
-    lection = DB.GetLection(app.idLection)
+@router.get("/exportExel/{idLection}")
+def download_file(idLection: str):
+    lection = DB.GetLection(idLection)
     df = pd.DataFrame(columns=[ "time", "course", "lection", "answer_1", "answer_2", "answer_3", "answer_4", "answer_5", "is_relevant" , "is_positive ", "object"])
 
     for statistic in lection.feedback:
@@ -25,7 +25,7 @@ def download_file(app: DownloadLectionStatistiic):
         elif statistic.object == 2:
             objectName = "препод"
         
-        # tutor, mentor, org = DB.GetRecomendation(app.idLection)
+        # tutor, mentor, org = DB.GetRecomendation(idLection)
 
         df.loc[len(df.index)] = [(statistic.time).strftime('%Y-%m-%d %H:%M:%S'), lection.titleCourse, lection.title, ((statistic.answer)[0]).answer, ((statistic.answer)[1]).answer, ((statistic.answer)[2]).answer, ((statistic.answer)[3]).answer, ((statistic.answer)[4]).answer, statistic.is_relevant, statistic.is_positive, objectName]
     df.to_excel("app/file/output.xlsx")  

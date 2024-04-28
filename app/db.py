@@ -138,7 +138,7 @@ class UseDB():
             if str(feedback["idFeedbak"]) == idFeedback:
                 for answer in feedback["answer"]:
                     dataAnswer.append(Answer(question=answer["question"], answer=answer["answer"]))
-                    
+
         client.close()
         return dataAnswer
 
@@ -163,15 +163,16 @@ class UseDB():
         collection = client.feedback.lection
         
         negativTutor, negativMentor, negativOrg = "", "", ""
-        for feedback in collection.find({"_id": ObjectId(idLection)})["feedback"]:
+        fedbackFilter = collection.find_one({"_id": ObjectId(idLection)})
+        for feedback in fedbackFilter["feedback"]:
             if feedback["object"] == 0:
-                for answer in feedback["object"]["answer"]:
+                for answer in feedback["answer"]:
                     negativTutor += answer["answer"]
             elif feedback["object"] == 1:
-                for answer in feedback["object"]["answer"]:
+                for answer in feedback["answer"]:
                     negativMentor += answer["answer"]
             elif feedback["object"] == 2:
-                for answer in feedback["object"]["answer"]:
+                for answer in feedback["answer"]:
                     negativOrg += answer["answer"]
         
         return "test", "test", "test"
@@ -195,6 +196,7 @@ class UseDB():
                                           "is_positive": is_positive, "object": object, "time": time})
         
         collection.update_one({"_id": ObjectId(idLection)}, {"$set": {"feedback": newFeedback}})
+        collection.update_one({"_id": ObjectId(idLection)}, {"$set": {"countAnswer": lection["countAnswer"]+1}})
         
         client.close()
     
