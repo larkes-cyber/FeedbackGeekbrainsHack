@@ -1,6 +1,6 @@
 # Putoshka feedback contest
 ## [Презентация](https://docs.google.com/presentation/d/1icRcFmKMl3mMHESSqdPydqm_Im7WrShC/edit?usp=share_link&ouid=111794431814724437121&rtpof=true&sd=true)
-## [Screencast](https://drive.google.com/drive/folders/1kIR-7plaWlezFQQ7AHu1XYHAvr0g_6A_?usp=share_link)
+## [Screencast](https://drive.google.com/file/d/1zevZ4ZhC7ul1v5PTuEyUUFEi_8PpMua_/view?usp=sharing)
 ## [Website](https://feedback-geekbrains-hack.vercel.app/)
 
 ## Команда
