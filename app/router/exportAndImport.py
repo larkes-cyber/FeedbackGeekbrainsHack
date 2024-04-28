@@ -52,7 +52,7 @@ async def upload_file(file: UploadFile = File(...)):
         
         if titleCourse not in dataTitleCourse:
             idxCourse = DB.AddCourse(titleCourse)
-            idxLection = DB.AddLection(titleLection, idxCourse, "Описание курса", "Преподователь курса")
+            idxLection = DB.AddLection(titleLection, idxCourse, "Описание курса", "Преподаватель курса")
         dataTitleCourse.append(titleCourse)
 
         dataBaseQestion = [
