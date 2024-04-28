@@ -18,7 +18,22 @@ import Button from '@mui/material/Button';
 import AddCourseDialog from '../../components/dialog/AddCourseDialog';
 import AddLectionDialog from '../../components/dialog/AddLectionDialog';
 import FilteredLectionsList from '../../components/list/FilteredLectionsList';
+import { styled } from '@mui/material/styles';
 
+
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+  
 
 
 
@@ -127,40 +142,61 @@ const TutorPage = () => {
                         />
                         {
                         localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ?
-                        <div 
-                        className='tutor_page__lections__buttons' 
-                        style={{
-                            width:"95%", display:"flex", flexDirection:"row", marginLeft:"2%",
-                            justifyContent:"space-between", marginBottom:"2%"
-                        }}
-                        >
+                        <div style={{width:"95%", display:"flex",flexDirection:"column"}}>  
+                            <div 
+                            className='tutor_page__lections__buttons' 
+                            style={{
+                                width:"100%", display:"flex", flexDirection:"row", marginLeft:"2%",
+                                justifyContent:"space-between", marginBottom:"2%"
+                            }}
+                            >
+                                <Button
+                                    component="label"
+                                    sx={{width:"49%", height:"36px"}}
+                                    role={undefined}
+                                    variant="contained"
+                                    color='secondary'
+                                    tabIndex={-1}
+                                    onClick={() => {
+                                        setShowingCourseDialog(true);
+                                    }}
+                                    >
+                                        Добавить курс
+                                </Button>
+                                <Button
+                                    component="label"
+                                    sx={{width:"49%", height:"36px"}}
+                                    role={undefined}
+                                    variant="contained"
+                                    color='secondary'
+                                    tabIndex={-1}
+                                    onClick={() => {
+                                        setShowingLectionDialog(true);
+                                    }}
+                                    >
+                                    Добавить лекцию
+                                </Button>
+                            </div> 
                             <Button
-                                component="label"
-                                sx={{width:"48%", height:"36px"}}
-                                role={undefined}
-                                variant="contained"
-                                color='secondary'
-                                tabIndex={-1}
-                                onClick={() => {
-                                    setShowingCourseDialog(true);
-                                }}
-                                >
-                                    Добавить курс
-                            </Button>
-                            <Button
-                                component="label"
-                                sx={{width:"48%", height:"36px"}}
-                                role={undefined}
-                                variant="contained"
-                                color='secondary'
-                                tabIndex={-1}
-                                onClick={() => {
-                                    setShowingLectionDialog(true);
-                                }}
-                                >
-                                Добавить лекцию
-                            </Button>
-                        </div> : null
+                                    component="label"
+                                    sx={{width:"100%", height:"36px", ml:"2%"}}
+                                    role={undefined}
+                                    variant="contained"
+                                    color='secondary'
+                                    tabIndex={-1}
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        lectionRepository.importLectionsFile(file).then((r)=>{
+                                            refreshLections();
+                                        })
+
+                                    }}  
+                                    >
+                                    Импорт лекции
+                                    <VisuallyHiddenInput type="file" />
+                                </Button>
+                        </div>  
+                        : null
                         }
                         {
                             courses != null && filterText.length == 0  ? <LectionsList 

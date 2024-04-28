@@ -80,6 +80,10 @@ class LectionRepository{
         const data = await this._lectionsDataSource.fetchStatistics(idLection);
         return await data.json();
     }
+
+    async importLectionsFile(file){
+        return await this._lectionsDataSource.importLectionsFile(file);
+    }
 }
 
 export default LectionRepository;

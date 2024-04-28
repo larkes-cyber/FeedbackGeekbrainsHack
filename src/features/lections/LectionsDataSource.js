@@ -1,7 +1,7 @@
 
 class LectionsDataSource{
 
-    _api = "https://22be-185-6-247-97.ngrok-free.app/";
+    _api = "https://b9ac-185-6-247-97.ngrok-free.app/";
 
     async fetchCourses(){
         try{
@@ -156,6 +156,25 @@ class LectionsDataSource{
                 body:JSON.stringify({
                     idLection:idLection
                 })
+            })
+            if(data.ok) return await data
+            else throw await new Error("some web error")
+        }catch(e){
+            console.log(e);
+        }
+    }
+
+    async importLectionsFile(file){
+        try{
+            const formData = new FormData();
+            formData.append("file", file);
+            const data = await fetch(`${this._api}importExel`, {
+                method: 'POST',
+                headers: {
+                  'Access-Control-Allow-Origin': '*',
+                  "ngrok-skip-browser-warning": "1"
+                },
+                body:formData
             })
             if(data.ok) return await data
             else throw await new Error("some web error")

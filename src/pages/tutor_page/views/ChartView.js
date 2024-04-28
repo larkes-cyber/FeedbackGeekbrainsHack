@@ -28,6 +28,7 @@ export const barOptions = {
 };
 
 const barLabels = ['вебинар','программа','преподаватель'];
+const activeLabels = ['ночь', 'вечер','день','утро'];
 
 const donatOptions = {
   maintainAspectRatio: false,
@@ -49,6 +50,7 @@ const ChartView = (props) => {
   const [reviewData, setReviewData] = useState(null);
   const [infoData, setInfoData] = useState(null);
   const [roleData, setRoleData] = useState(null);
+  const [activeData, setActiveData] = useState(null);
 
 
   useEffect(()=>{
@@ -95,16 +97,28 @@ const ChartView = (props) => {
           }
         );
         setRoleData(
-          {
-          labels:barLabels,
-          datasets: [
             {
-              label: 'Стата',
-              data: [res.tutor, res.mentor, res.org],
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            }
-          ],
-        }
+            labels:barLabels,
+            datasets: [
+              {
+                label: 'Стата',
+                data: [res.tutor, res.mentor, res.org],
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              }
+            ],
+          }
+        )
+        setActiveData(
+          {
+            labels:activeLabels,
+            datasets: [
+              {
+                label: 'Стата',
+                data: [res.night, res.evening, res.day, res.morning],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+              }
+            ],
+          }
         )
       });
     }
@@ -151,8 +165,39 @@ const ChartView = (props) => {
               К кому направлен (вебинар, программа, преподаватель)
           </Typography>
           {roleData != null ? <Bar options={barOptions} data={roleData} /> : null}
+          <Typography
+                sx={{ display: 'inline',fontWeight: 'bold', mt:"3%"}}
+                component="span"
+                variant="h6"
+                color="text.primary"
+                textAlign="center"
+              >
+              Дневная активность 
+          </Typography>
+          {activeData != null ? <Bar options={barOptions} data={activeData} /> : null}
         </div>
-        <WordCloud data={data} />
+        <WordCloud
+          data={data}
+          width={500}
+          height={500}
+          font="Times"
+          fontStyle="italic"
+          fontWeight="bold"
+          fontSize={(word) => Math.log2(word.value) * 5}
+          spiral="rectangular"
+          rotate={(word) => word.value % 360}
+          padding={5}
+          random={Math.random}
+          onWordClick={(event, d) => {
+            console.log(`onWordClick: ${d.text}`);
+          }}
+          onWordMouseOver={(event, d) => {
+            console.log(`onWordMouseOver: ${d.text}`);
+          }}
+          onWordMouseOut={(event, d) => {
+            console.log(`onWordMouseOut: ${d.text}`);
+          }}
+        />
       </div>
     )
 

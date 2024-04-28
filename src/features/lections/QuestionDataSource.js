@@ -1,6 +1,6 @@
 class QuestionDataSource{
 
-    _api = "https://22be-185-6-247-97.ngrok-free.app/";
+    _api = "https://b9ac-185-6-247-97.ngrok-free.app/";
 
     async fetchToken(idLection){
         const data = await fetch(`${this._api}/fetchTokenQuestion`, {
