@@ -19,6 +19,9 @@ import AddCourseDialog from '../../components/dialog/AddCourseDialog';
 import AddLectionDialog from '../../components/dialog/AddLectionDialog';
 import FilteredLectionsList from '../../components/list/FilteredLectionsList';
 import { styled } from '@mui/material/styles';
+import { Link,NavLink } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 
 
@@ -96,6 +99,17 @@ const TutorPage = () => {
 
     return(
         <section className='tutor_page'>
+               <NavLink style={{width:"50%"}} to="/">
+                <Button
+                variant="outlined"
+                color="secondary"
+                sx={{mb:"3%"}}
+                startIcon={<ArrowBackIcon/>}
+                
+                    >
+                    Вернуться назад
+                    </Button>
+                </NavLink>
             {showCourseDialog ? <AddCourseDialog
                 callbackClose={() =>{
                     setShowingCourseDialog(false);

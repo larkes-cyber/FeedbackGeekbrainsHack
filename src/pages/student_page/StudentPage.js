@@ -11,6 +11,9 @@ import { IconButton } from '@mui/material';
 import ListItemText from '@mui/material/ListItemText';
 import { Card } from '@mui/material';
 import FilteredLectionsList from '../../components/list/FilteredLectionsList';
+import { Link,NavLink } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Button from '@mui/material/Button';
 
 
 
@@ -30,6 +33,7 @@ const StudentPage = () => {
     const [filterText, setFilterText] = useState('');
     const [answers, setAnswers] = useState([]);
     const [chatHistory, setChatHistory] = useState([]);
+    
 
     const lectionRepository = new LectionRepository();
 
@@ -125,6 +129,17 @@ const StudentPage = () => {
 
     return(
         <section className='student_page'>
+            <NavLink style={{width:"50%"}} to="/">
+                <Button
+                variant="outlined"
+                color="secondary"
+                sx={{mb:"3%"}}
+                startIcon={<ArrowBackIcon/>}
+                
+                    >
+                    Вернуться назад
+                </Button>
+            </NavLink>
             <div className='container'>
                 <div className='student_page__wrapper'>
                     <div className='student_page__lections'>
