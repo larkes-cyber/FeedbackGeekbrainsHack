@@ -43,7 +43,7 @@ const MainView = (props) => {
                {props.lection.description}
             </Typography>
             
-            <RecomendField label={" Преподователь: "} content={props.lection.tutor} />
+            <RecomendField label={" Преподаватель: "} content={props.lection.tutor} />
             <RecomendField label={"Колличество ответов: "} content={props.lection.answCount} />
 
             <Typography
@@ -54,9 +54,9 @@ const MainView = (props) => {
                 >
             </Typography>
 
-            {props.lection.tutorRec != null ?  <RecomendField label={"Рекомендации преподователю: "} content={props.lection.tutorRec} /> : null }
-            {props.lection.mentorRec != null && (localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации ментору: "} content={props.lection.mentorRec} /> : null }
-            {props.lection.orgRec != null && (localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации орг: "} content={props.lection.orgRec} /> : null }
+            {props.lection.tutorRec != null ?  <RecomendField label={"Рекомендации преподавателю: "} content={props.lection.tutorRec} /> : null }
+            {props.lection.mentorRec != null && (localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации методологу: "} content={props.lection.mentorRec} /> : null }
+            {props.lection.orgRec != null && (localStorage.getItem("role") == "org" ) ?  <RecomendField label={"Рекомендации организатору: "} content={props.lection.orgRec} /> : null }
 
             <a href={`https://75cf-185-6-247-97.ngrok-free.app/exportExel/${props.lection.id}`} style={{textDecoration:"none"}} target="_blank" download>
                 <Button
