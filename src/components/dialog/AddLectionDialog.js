@@ -97,7 +97,7 @@ const AddLectionDialog = (
             margin="dense"
             id="name"
             name="email"
-            label="Введите перподователя лекции"
+            label="Введите преподавателя лекции"
             fullWidth
             onChange={(e) => {
               setTutor(e.target.value);

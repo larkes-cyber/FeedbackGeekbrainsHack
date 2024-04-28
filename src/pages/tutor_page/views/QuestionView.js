@@ -39,20 +39,24 @@ const QuestionView = (props) => {
                      element.question
                     }
                 />
-                {/* <IconButton  
-                sx={{mr:1}}
-                >
-                  <BorderColorIcon/>
-                </IconButton> */}
-                <IconButton
-                  sx={{mr:1}}
-                  onClick={()=>{
-                        console.log(element);
-                        props.onDeleteQuestion(element.id);
-                    }}
-                  >
-                   <ClearIcon/>
-                </IconButton>
+                {
+                    localStorage.getItem("role") == "meth" || localStorage.getItem("role") == "org" ?
+                    <IconButton
+                        sx={{mr:1}}
+                        onClick={()=>{
+                            console.log(element);
+                            props.onDeleteQuestion(element.id);
+                        }}
+                        >
+                        <ClearIcon/>
+                    </IconButton> 
+                   : null
+
+                }
+                
+
+                
+                
             </Card>);
         });
         setQuestions(newArr);
