@@ -27,7 +27,7 @@ export const barOptions = {
   },
 };
 
-const barLabels = ['вебинар','программа','преподаватель'];
+const barLabels = ["преподаватель", "методолог", "организатор"];
 const activeLabels = ['ночь', 'вечер','день','утро'];
 
 const donatOptions = {
@@ -101,7 +101,7 @@ const ChartView = (props) => {
             labels:barLabels,
             datasets: [
               {
-                label: 'Стата',
+                label: 'Стастистика',
                 data: [res.tutor, res.mentor, res.org],
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
               }
@@ -145,7 +145,7 @@ const ChartView = (props) => {
               }
            
            </ChartWrapper>
-           <ChartWrapper title={"Релевантен/Нерелевантные"}>
+           <ChartWrapper title={"Информативно/Не информативно"}>
             {infoData != null ?
               <Pie 
                 data={infoData} 
@@ -162,7 +162,7 @@ const ChartView = (props) => {
                 color="text.primary"
                 textAlign="center"
               >
-              К кому направлен (вебинар, программа, преподаватель)
+              К кому направлен (преподаватель, методолог, организатор)
           </Typography>
           {roleData != null ? <Bar options={barOptions} data={roleData} /> : null}
           <Typography
