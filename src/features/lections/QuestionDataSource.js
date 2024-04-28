@@ -42,6 +42,7 @@ class QuestionDataSource{
     }
 
     async addAnswer(answers){
+        console.log(answers);
         const data = await fetch(`${this._api}answerQestion`, {
             method: 'POST',
             headers: {
@@ -52,7 +53,11 @@ class QuestionDataSource{
             },
             body:
             JSON.stringify({
-                question:answers
+                idLection:answers[0].idLection,
+                question:answers.map(res => ({
+                    idQestion:res.idQestion,
+                    answer:res.answer
+                }))
             })
         });
         if(data.ok) return data

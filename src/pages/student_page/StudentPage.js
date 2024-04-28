@@ -64,6 +64,10 @@ const StudentPage = () => {
     useEffect(() => {
         if(questions != null){
             setChatMessages([<Message isClient={false} message={questions[0].question} key={questions[0].question} />])
+            setChatHistory([{
+                isClient:false,
+                message:questions[0].question,
+                idQuestion:questions[0].id }]);
             const dymQ = dynamicQuestions;
             dymQ.shift();
             setDinamicQuestions(dymQ);
@@ -81,7 +85,8 @@ const StudentPage = () => {
 
     const addBotMessage = () => {
         if(dynamicQuestions.length != 0){
-            addNewMessage(false, dynamicQuestions[0].question);
+            console.log(dynamicQuestions[0]);
+            addNewMessage(false, dynamicQuestions[0].question, dynamicQuestions[0].id );
             const dymQ = dynamicQuestions;
             dymQ.shift();
             setDinamicQuestions(dymQ);
@@ -92,9 +97,11 @@ const StudentPage = () => {
                 for(let i = 0; i < chatHistory.length-1; i+=2){
                     output.push({
                         idQestion:chatHistory[i].idQuestion,
-                        answer:chatHistory[i+1].message
+                        answer:chatHistory[i+1].message,
+                        idLection:selectedLection
                     });
                 }
+
                 lectionRepository.addAnswer(output).then(()=>{
                     setChatHistory([]);
                 })

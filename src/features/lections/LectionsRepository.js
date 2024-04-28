@@ -52,7 +52,8 @@ class LectionRepository{
 
  
     async addAnswer(answers){
-
+        
+        return this._questionDataSource.addAnswer(answers);
     }
 
     async addCourse(title){

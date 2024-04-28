@@ -11,6 +11,8 @@
         &__chart{
             max-height: 80vh;
             overflow-y: scroll;
+            display: flex;
+            flex-direction: column-reverse;
         }
     }
     &__lections{
