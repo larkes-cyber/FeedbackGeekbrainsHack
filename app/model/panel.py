@@ -167,3 +167,22 @@ class RequestAddLection(BaseModel):
 
 class RequestDeleteLection(BaseModel):
     idLection: str
+
+class RequestFetchStatistic(BaseModel):
+    idLection: str
+
+class ResponseFetchStatistic(BaseModel):
+    night: int 
+    morning: int
+    day: int
+    evening: int
+    
+    goodRevue: int
+    badRevue: int
+
+    badInformative: int
+    goodInformative: int
+
+    tutor: int
+    mentor: int
+    org: int 

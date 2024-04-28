@@ -21,6 +21,7 @@ class RequestAnswerQestion(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
+                    
                     "question": [{"idQestion": "string",
                                 "answer": "string"}],
                 }

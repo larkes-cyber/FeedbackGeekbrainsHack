@@ -6,8 +6,8 @@ from app.model.panel import Course, Lection, LectionInfo, LectionRecommendation,
 router = APIRouter()
 
 # Работа с курсами/лекциями
-from app.model.panel import RequestFilterLectionByTitle, RequestFilterLectionByCourse
-from app.model.panel import ResponseFileterLection, ResponseFetchCourse, ResponseFetchCourseAndLection
+from app.model.panel import RequestFilterLectionByTitle, RequestFilterLectionByCourse, RequestFetchStatistic
+from app.model.panel import ResponseFileterLection, ResponseFetchCourse, ResponseFetchCourseAndLection, ResponseFetchStatistic
 
 from app.model.panel import ResponseFetchLectionInfo
 from app.model.panel import RequestFilterIdLection
@@ -43,8 +43,7 @@ async def fetchLectionMain(app: RequestFilterIdLection):
     info = LectionInfo(title=lection.title, tutor=lection.tutor, discription=lection.description, counterAnswer=lection.countAnswer)
 
     tutor, mentor, org = DB.GetRecomendation(app.idLection)
-
-    recommendation = LectionRecommendation(tutor=tutor, mentor=mentor, org=org) # нейронка по статистике, среднее. Из статистики
+    recommendation = LectionRecommendation(tutor=tutor, mentor=mentor, org=org)
 
     return ResponseFetchLectionInfo(info=info, recommendation=recommendation)
 
@@ -110,6 +109,9 @@ async def deleteCourse(app: RequestDeleteLection):
 
 
 # Работа со статистикой
-@router.post("/fetchStatistic")
-async def fetchStatistic(app: RequestAddLection):
-    pass
+@router.post("/fetchStatistic", response_model=ResponseFetchStatistic)
+async def fetchStatistic(app: RequestFetchStatistic):
+    night, morning, day, evening, tutor, mentor, org, badRevue, goodRevue, badInformative, goodInformative = DB.GetStatistic(idLection=app.idLection)
+
+    return ResponseFetchStatistic(night=night, morning=morning, day=day, evening=evening, goodRevue=goodRevue, badRevue=badRevue, badInformative=badInformative, goodInformative=goodInformative,
+                                  tutor=tutor, mentor=mentor, org=org)

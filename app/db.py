@@ -4,6 +4,11 @@ from typing import List
 from bson.objectid import ObjectId
 from datetime import datetime
 
+from langchain.schema import HumanMessage
+from langchain.chat_models.gigachat import GigaChat
+
+chat = GigaChat(credentials='MjU3ODhkOTQtZDVjMy00YTNjLWE4ZmItNDM4NzBhYTAzZDAyOjQzMmE1Y2JjLTNmNzQtNDI5Ny1hZDdjLWU2ZjFhMGIzOThmNA==', verify_ssl_certs=False, model="GigaChat")
+
 # Заготовки
 class Course(BaseModel):
     id: str
@@ -162,20 +167,64 @@ class UseDB():
         client = pymongo.MongoClient(self.session)
         collection = client.feedback.lection
         
-        negativTutor, negativMentor, negativOrg = "", "", ""
+        negativTutor, negativMentor, negativOrg = " ", " ", " "
+        fedbackFilter = collection.find_one({"_id": ObjectId(idLection)})
+        for feedback in fedbackFilter["feedback"]:
+            if (feedback["object"] == 0) and (feedback["is_positive"] == 0):
+                for answer in feedback["answer"]:
+                    negativTutor += answer["answer"]
+            elif (feedback["object"] == 1) and (feedback["is_positive"] == 0):
+                for answer in feedback["answer"]:
+                    negativMentor += answer["answer"]
+            elif (feedback["object"] == 2) and (feedback["is_positive"] == 0):
+                for answer in feedback["answer"]:
+                    negativOrg += answer["answer"]
+                    
+        recomnedTutor = chat([HumanMessage(content="Напиши рекомендацию на основе коментариев в одно небольшое предложение, без введения, безлично для преподователя: " + negativTutor[:300])]).content
+        recomnedMentor = chat([HumanMessage(content="Напиши рекомендацию на основе коментариев в одно небольшое предложение, без введения, безлично для ментора: " + negativMentor[:300])]).content
+        recomnedOrg = chat([HumanMessage(content="Напиши рекомендацию на основе коментариев в одно небольшое предложение, без введения, безлично для организатора: " + negativOrg[:300])]).content
+
+        return recomnedTutor, recomnedMentor, recomnedOrg
+
+    def GetStatistic(self, idLection):
+        client = pymongo.MongoClient(self.session)
+        collection = client.feedback.lection
+        
+        goodRevue, badRevue, badInformative, goodInformative, negativTutor, negativMentor, negativOrg = 0, 0, 0, 0, 0, 0, 0 
+        night, morning, day, evening = 0, 0, 0, 0
         fedbackFilter = collection.find_one({"_id": ObjectId(idLection)})
         for feedback in fedbackFilter["feedback"]:
             if feedback["object"] == 0:
-                for answer in feedback["answer"]:
-                    negativTutor += answer["answer"]
+                negativTutor += 1
             elif feedback["object"] == 1:
-                for answer in feedback["answer"]:
-                    negativMentor += answer["answer"]
+                negativMentor += 1
             elif feedback["object"] == 2:
-                for answer in feedback["answer"]:
-                    negativOrg += answer["answer"]
-        
-        return "test", "test", "test"
+                negativOrg += 1
+            
+            if feedback["is_positive"] == 0:
+                badRevue += 1
+            elif feedback["is_positive"] == 1:
+                goodRevue += 1
+
+            if feedback["is_relevant"] == 0:
+                badInformative += 1
+            elif feedback["is_relevant"] == 1:
+                goodInformative += 1\
+            
+            time = (feedback["time"])
+            time = time.hour
+            if 0 < time and time <= 6:
+                night += 1
+            elif 6 < time and time <= 12:
+                morning += 1
+            elif 12 < time and time <= 18:
+                day += 1
+            elif 18 < time and time < 24:
+                evening += 1
+
+
+        return (night, morning, day, evening, negativTutor, negativMentor, negativOrg, badRevue, goodRevue, badInformative, goodInformative)
+
 
     
     def AddFeedback(self, idLection, dataAnswer:List[Answer], is_relevant, is_positive, object, time):
