@@ -47,7 +47,7 @@ const RolePage = () => {
                     localStorage.setItem("role", "tutor");
                 }}
                 >
-            Преподователь
+            Преподаватель
         </Button>
     </NavLink>
     <NavLink style={{width:"50%"}} to="/tutor">
